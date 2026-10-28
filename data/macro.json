@@ -1,0 +1,65 @@
+{
+  "fetched_at_utc": "2026-10-28 03:13:34Z",
+  "fetched_at_unix": 1793157214,
+  "source": "FRED (Federal Reserve Bank of St. Louis), EOD",
+  "note": "Данные на конец торгового дня, не live-котировки.",
+  "data": {
+    "SP500": {
+      "name": "S&P 500 (индекс)",
+      "date": "2026-10-27",
+      "value": 7722.6,
+      "pct_change": 0.6
+    },
+    "NASDAQCOM": {
+      "name": "Nasdaq Composite (индекс)",
+      "date": "2026-10-26",
+      "value": 26169.38,
+      "pct_change": 0.82
+    },
+    "DJIA": {
+      "name": "Dow Jones (индекс)",
+      "date": "2026-10-27",
+      "value": 52377.57,
+      "pct_change": 0.03
+    },
+    "DGS10": {
+      "name": "UST 10Y доходность, %",
+      "date": "2026-10-26",
+      "value": 5.0,
+      "change_bp": 0.0,
+      "pct_change": 0.0
+    },
+    "DGS2": {
+      "name": "UST 2Y доходность, %",
+      "date": "2026-10-26",
+      "value": 4.68,
+      "change_bp": -1.0,
+      "pct_change": -0.21
+    },
+    "DTWEXBGS": {
+      "name": "Индекс доллара (широкий)",
+      "date": "2026-10-23",
+      "value": 121.3202,
+      "pct_change": -0.03
+    },
+    "DCOILWTICO": {
+      "name": "Нефть WTI, $/барр",
+      "date": "2026-10-20",
+      "value": 107.89,
+      "pct_change": -1.93
+    },
+    "DCOILBRENTEU": {
+      "name": "Нефть Brent, $/барр",
+      "date": "2026-10-20",
+      "value": 115.22,
+      "pct_change": -3.03
+    },
+    "VIXCLS": {
+      "name": "VIX (волатильность акций)",
+      "date": "2026-10-26",
+      "value": 18.39,
+      "pct_change": -5.45
+    }
+  },
+  "errors": {}
+}

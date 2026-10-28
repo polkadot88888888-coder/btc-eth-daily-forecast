@@ -45,15 +45,17 @@ curl -s "https://www.deribit.com/api/v2/public/get_tradingview_chart_data?instru
    акциями — это главный фактор. Если акции растут, а BTC нет — это признак слабости BTC.
 2. **Макро**: доходности 10-летних и 2-летних облигаций США, индекс доллара DXY,
    нефть Brent и WTI.
-   Источник макро — **Yahoo Finance v8 chart API** (доступен из облака). Для каждого тикера
-   бери `regularMarketPrice` и `chartPreviousClose` → направление и %:
+   Источник макро — файл **`data/macro.json`** в корне репозитория. Его готовит отдельный
+   GitHub Action (FRED, ФРС Сент-Луис) ДО запуска этой рутины — читай готовый файл, сам
+   биржи не опрашивай (Yahoo/Stooq из облака заблокированы ботозащитой).
    ```
-   curl -sS "https://query1.finance.yahoo.com/v8/finance/chart/NQ=F"   # Nasdaq-100 фьюч
-   # ES=F (S&P500 фьюч), ^TNX (UST 10Y), ^FVX (5Y), ^IRX (13w), DX-Y.NYB (DXY),
-   # CL=F (WTI), BZ=F (Brent), GC=F (золото). Тикер подставляй в конец пути.
+   cat data/macro.json   # ключи: SP500, NASDAQCOM, DJIA, DGS10, DGS2, DTWEXBGS,
+                         # DCOILWTICO, DCOILBRENTEU, VIXCLS; у каждого value/date/change
    ```
-   Если Yahoo недоступен — резерв `https://stooq.com/q/l/?s=^ndx&f=sd2t2ohlcv&h&e=csv`
-   (символы: ^ndx, ^spx, cl.f, dx.f); если и это не вышло — честно «данных нет».
+   ВАЖНО: это EOD-данные (значение на конец торгового дня, поле `date`), не live-фьючерсы —
+   так и подавай их («акции на закрытии <date>…»). Проверь `fetched_at_utc`: если снимок
+   старше ~2 суток или `data` пуст — значит Action не отработал, напиши «макро: данных нет».
+   Для сегодняшнего настроения рынка (фьючерсы «прямо сейчас», тон ФРС) дополняй это WebSearch.
 3. **Крипта (Deribit, BTC-PERPETUAL / ETH-PERPETUAL)**:
    - свечи 48 ч (resolution=60) и дневные 45 дней (resolution=1D):
      `get_tradingview_chart_data?instrument_name=BTC-PERPETUAL&resolution=60&start_timestamp=<мс>&end_timestamp=<мс>`;
