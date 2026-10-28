@@ -6,7 +6,10 @@
 точности прогнозов модели, поэтому прогнозы должны быть конкретными и проверяемыми
 (уровень цены + точный срок с датой и временем + честная вероятность).
 
-Биржа для свечей и деривативов по умолчанию — **Bybit** (публичные эндпоинты без ключа).
+Источник цен, свечей и деривативов по умолчанию — **Deribit** (публичные эндпоинты без ключа,
+доступен из облака). ⚠️ **Bybit и Binance geo-блокируют страну облачного сервера**
+(CloudFront country block / HTTP 403) — НЕ используй их. Deribit даёт по BTC-PERPETUAL и
+ETH-PERPETUAL: свечи, funding, OI, индекс-цену, DVOL и опционы — всего хватает.
 
 ---
 
@@ -15,7 +18,7 @@
 Открой `journal.md` в корне репозитория. В нём лежат все ранее поставленные прогнозы.
 
 1. Найди все прогнозы со статусом `открыт`, у которых **срок уже прошёл** (сравни срок с
-   текущим временем). Закрой каждый по реальным свечам Bybit:
+   текущим временем). Закрой каждый по реальным часовым свечам Deribit (BTC-PERPETUAL):
    - `сбылось` / `не сбылось` / `неясно` — с краткой причиной.
    - Прогноз на **касание** уровня, который был достигнут раньше срока, закрывай досрочно
      как `сбылось`.
@@ -28,11 +31,11 @@
 4. Пересчитай сводный Брайер-скор по ВСЕМ когда-либо закрытым прогнозам: среднее `(p−исход)²`.
    0 — идеально, 0.25 — как подбрасывать монетку, > 0.25 — хуже монетки.
 
-Как проверять свечами: бери часовые свечи Bybit за нужный период и смотри high/low/close.
+Как проверять свечами: бери часовые свечи Deribit за нужный период и смотри high/low/close.
 ```
-curl -s "https://api.bybit.com/v5/market/kline?category=linear&symbol=BTCUSDT&interval=60&start=<ms>&end=<ms>&limit=1000"
+curl -s "https://www.deribit.com/api/v2/public/get_tradingview_chart_data?instrument_name=BTC-PERPETUAL&resolution=60&start_timestamp=<ms>&end_timestamp=<ms>"
 ```
-(поле result.list: [startMs, open, high, low, close, volume, turnover], по убыванию времени).
+(в result — параллельные массивы ticks, open, high, low, close, volume; ms = Unix-время ×1000).
 
 ---
 
@@ -42,19 +45,27 @@ curl -s "https://api.bybit.com/v5/market/kline?category=linear&symbol=BTCUSDT&in
    акциями — это главный фактор. Если акции растут, а BTC нет — это признак слабости BTC.
 2. **Макро**: доходности 10-летних и 2-летних облигаций США, индекс доллара DXY,
    нефть Brent и WTI.
-3. **Крипта (Bybit)**:
-   - часовые свечи BTC/ETH за 48 ч и дневные за 45 дней;
+   Источник макро — **Yahoo Finance v8 chart API** (доступен из облака). Для каждого тикера
+   бери `regularMarketPrice` и `chartPreviousClose` → направление и %:
+   ```
+   curl -sS "https://query1.finance.yahoo.com/v8/finance/chart/NQ=F"   # Nasdaq-100 фьюч
+   # ES=F (S&P500 фьюч), ^TNX (UST 10Y), ^FVX (5Y), ^IRX (13w), DX-Y.NYB (DXY),
+   # CL=F (WTI), BZ=F (Brent), GC=F (золото). Тикер подставляй в конец пути.
+   ```
+   Если Yahoo недоступен — резерв `https://stooq.com/q/l/?s=^ndx&f=sd2t2ohlcv&h&e=csv`
+   (символы: ^ndx, ^spx, cl.f, dx.f); если и это не вышло — честно «данных нет».
+3. **Крипта (Deribit, BTC-PERPETUAL / ETH-PERPETUAL)**:
+   - свечи 48 ч (resolution=60) и дневные 45 дней (resolution=1D):
+     `get_tradingview_chart_data?instrument_name=BTC-PERPETUAL&resolution=60&start_timestamp=<мс>&end_timestamp=<мс>`;
    - реальные экстремумы со временем, EMA20;
-   - funding, открытый интерес (OI), ликвидации;
-   - индекс волатильности DVOL с Deribit:
-     `https://www.deribit.com/api/v2/public/get_volatility_index_data?currency=BTC&start_timestamp=<мс>&end_timestamp=<мс>&resolution=1D`
-   Публичные эндпоинты Bybit без ключа:
-   - тикер/цена: `https://api.bybit.com/v5/market/tickers?category=linear&symbol=BTCUSDT`
-   - funding: `https://api.bybit.com/v5/market/funding/history?category=linear&symbol=BTCUSDT&limit=10`
-   - OI: `https://api.bybit.com/v5/market/open-interest?category=linear&symbol=BTCUSDT&intervalTime=1h&limit=48`
-   - ликвидации — через поиск/CoinGlass (если нет ключа, так и напиши).
+   - индекс-цена: `get_index_price?index_name=btc_usd` (и `eth_usd`);
+   - funding + OI + 24ч статы: `get_ticker?instrument_name=BTC-PERPETUAL`
+     (поля `funding_8h`, `open_interest`, `mark_price`, `stats.high/low/volume`);
+   - DVOL: `get_volatility_index_data?currency=BTC&start_timestamp=<мс>&end_timestamp=<мс>&resolution=1D`;
+   - ликвидации — через поиск/WebSearch (точных цифр из бесплатного API нет — так и напиши).
+   Все URL с префиксом `https://www.deribit.com/api/v2/public/`.
 4. **Потоки в спотовые BTC/ETH-ETF** за последние дни:
-   `https://www.tftc.io/bitcoin-etf-flows/latest.json`
+   `https://www.tftc.io/bitcoin-etf-flows/latest.json` (если недоступен — возьми из WebSearch).
 5. **События дня и недели со временем** (в America/Vancouver): CPI, PPI, PCE, NFP, заявки по
    безработице, заседания и речи ФРС, отчёты крупных техкомпаний, геополитика, экспирации
    опционов (пятница 08:00 UTC), открытие фьючерсов CME (вс. вечер), регуляторика.
