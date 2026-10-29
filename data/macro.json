@@ -1,40 +1,40 @@
 {
-  "fetched_at_utc": "2026-10-28 16:52:10Z",
-  "fetched_at_unix": 1793206330,
+  "fetched_at_utc": "2026-10-29 17:09:22Z",
+  "fetched_at_unix": 1793293762,
   "source": "FRED (Federal Reserve Bank of St. Louis), EOD",
   "note": "Данные на конец торгового дня, не live-котировки.",
   "data": {
     "SP500": {
       "name": "S&P 500 (индекс)",
-      "date": "2026-10-27",
-      "value": 7722.6,
-      "pct_change": 0.6
+      "date": "2026-10-28",
+      "value": 7743.98,
+      "pct_change": 0.28
     },
     "NASDAQCOM": {
       "name": "Nasdaq Composite (индекс)",
-      "date": "2026-10-27",
-      "value": 26477.81,
-      "pct_change": 1.18
+      "date": "2026-10-28",
+      "value": 26549.85,
+      "pct_change": 0.27
     },
     "DJIA": {
       "name": "Dow Jones (индекс)",
-      "date": "2026-10-27",
-      "value": 52377.57,
-      "pct_change": 0.03
+      "date": "2026-10-28",
+      "value": 52475.1,
+      "pct_change": 0.19
     },
     "DGS10": {
       "name": "UST 10Y доходность, %",
-      "date": "2026-10-26",
-      "value": 5.0,
-      "change_bp": 0.0,
-      "pct_change": 0.0
+      "date": "2026-10-27",
+      "value": 4.99,
+      "change_bp": -1.0,
+      "pct_change": -0.2
     },
     "DGS2": {
       "name": "UST 2Y доходность, %",
-      "date": "2026-10-26",
-      "value": 4.68,
-      "change_bp": -1.0,
-      "pct_change": -0.21
+      "date": "2026-10-27",
+      "value": 4.7,
+      "change_bp": 2.0,
+      "pct_change": 0.43
     },
     "DTWEXBGS": {
       "name": "Индекс доллара (широкий)",
@@ -44,21 +44,21 @@
     },
     "DCOILWTICO": {
       "name": "Нефть WTI, $/барр",
-      "date": "2026-10-20",
-      "value": 107.89,
-      "pct_change": -1.93
+      "date": "2026-10-27",
+      "value": 103.37,
+      "pct_change": -1.79
     },
     "DCOILBRENTEU": {
       "name": "Нефть Brent, $/барр",
-      "date": "2026-10-20",
-      "value": 115.22,
-      "pct_change": -3.03
+      "date": "2026-10-27",
+      "value": 123.1,
+      "pct_change": -3.92
     },
     "VIXCLS": {
       "name": "VIX (волатильность акций)",
-      "date": "2026-10-27",
-      "value": 17.52,
-      "pct_change": -4.73
+      "date": "2026-10-28",
+      "value": 16.91,
+      "pct_change": -3.48
     }
   },
   "errors": {}
