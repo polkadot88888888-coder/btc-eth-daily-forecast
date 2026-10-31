@@ -68,8 +68,8 @@ def parse_levels(md):
                       rf"сопротивлен\w*[:\s]*([^\n]*)", md, re.I)
         if not m:
             return [], []
-        s = [x.strip(" .") for x in m.group(1).split("/") if x.strip()][:2]
-        r = [x.strip(" .") for x in m.group(2).split("/") if x.strip()][:2]
+        s = [x.strip(" .") for x in m.group(1).split("/") if x.strip()][:3]
+        r = [x.strip(" .") for x in m.group(2).split("/") if x.strip()][:3]
         return s, r
     bs, br = grab("BTC"); es, er = grab("ETH")
     return {"btc_sup": bs, "btc_res": br, "eth_sup": es, "eth_res": er}
