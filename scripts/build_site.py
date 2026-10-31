@@ -461,7 +461,7 @@ def build():
 
 
 CSS = """
-:root{--bg:#070a16;--card:#121a2e;--card2:#172038;--ink:#eef1ff;--mut:#99a1c4;--line:#273253;
+:root{--bg:#05070f;--card:#141c33;--card2:#1c2847;--ink:#f1f3ff;--mut:#9aa3c7;--line:#31426e;
 --btc:#f7a23b;--eth:#a78bfa;--up:#2dd4a7;--down:#fb7185;--cy:#38bdf8;
 --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
 *{box-sizing:border-box}
@@ -480,7 +480,8 @@ h1{font-size:18px;margin:0;font-weight:800}
 .upd{color:var(--mut);font-size:12px;font-family:var(--mono)}
 .fade{opacity:0;transform:translateY(10px);animation:up .55s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:var(--d,0s)}
 @keyframes up{to{opacity:1;transform:none}}
-.card,.coin,.mood,.flow,.tldr,details.report{background:var(--card);border:1px solid var(--line);border-radius:20px}
+.card,.coin,.mood,.flow,.tldr,details.report{background:linear-gradient(180deg,#1c274a,#121a33);
+border:1px solid #33457240;border-radius:20px;box-shadow:0 14px 34px -22px #000d,inset 0 1px 0 #ffffff16}
 .hero{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
 .coin{position:relative;overflow:hidden;padding:16px 18px}
 .coin .nm{font-weight:800;font-size:12px;letter-spacing:1.6px}
@@ -534,7 +535,7 @@ h1{font-size:18px;margin:0;font-weight:800}
 .dot{width:11px;height:11px;border-radius:3px;display:inline-block}
 .dot.hit{background:var(--up);box-shadow:0 0 6px #2dd4a780}.dot.miss{background:var(--down)}
 .curve{width:100%;height:60px;display:block;margin-top:8px}
-.tldr{padding:18px 20px;margin:16px 0;border-color:#3a2f6b;background:#141633}
+.tldr{padding:18px 20px;margin:16px 0;border-color:#4a3f8a60;background:linear-gradient(180deg,#241d5a,#161233)}
 .tldr .h{color:#c3b6ff}.tldr ul{margin:0;padding:0;list-style:none}
 .tldr li{font-size:16px;font-weight:600;padding:9px 0;border-bottom:1px solid #ffffff12}
 .tldr li:last-child{border:0}
