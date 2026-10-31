@@ -158,8 +158,41 @@ def md_inline(s):
     return s
 
 
+def md_rich(s):
+    """Инлайн для отчёта: подсветка чисел, %, исходов — чтобы читать было вкусно."""
+    s = md_inline(s)
+    s = re.sub(r"(?<![\w>])(не\s+сбыл\w+|не\s+дош\w+|❌)", r'<b class="neg">\1</b>', s)
+    s = re.sub(r"(?<![\w>])(сбыл\w+|✅|☑)", r'<b class="pos">\1</b>', s)
+    s = re.sub(r"(?<![\w>])([+▲]\s?\d+(?:[.,]\d+)?\s?%)", r'<b class="pos">\1</b>', s)
+    s = re.sub(r"(?<![\w>])([−▼]\s?\d+(?:[.,]\d+)?\s?%|-\d+(?:[.,]\d+)?\s?%)",
+               r'<b class="neg">\1</b>', s)
+    s = re.sub(r"(?<![\w>\d])(\$\s?\d[\d.,]*\s?[kкmм]?)", r'<span class="num">\1</span>', s)
+    return s
+
+
+SEC_ICONS = [("поток", "🧠"), ("опцион", "🎯"), ("итог", "📊"), ("брайер", "📊"),
+             ("рынок", "💹"), ("событ", "📅"), ("polymarket", "🔮"),
+             ("таблиц", "📈"), ("прогноз", "📈"), ("уровн", "📐")]
+SEC_ACCENT = ["var(--btc)", "var(--eth)", "var(--up)", "var(--cy)", "#fbbf5a", "#f472b6"]
+
+
+def sec_icon(t):
+    tl = t.lower()
+    for k, ic in SEC_ICONS:
+        if k in tl:
+            return ic
+    return "🔹"
+
+
 def md_to_html(md):
     lines, out, i = md.splitlines(), [], 0
+    open_sec = [False]
+    sec_n = [0]
+
+    def close():
+        if open_sec[0]:
+            out.append("</div>"); open_sec[0] = False
+
     while i < len(lines):
         ln = lines[i]
         if not ln.strip():
@@ -168,28 +201,40 @@ def md_to_html(md):
             out.append("<hr>"); i += 1; continue
         m = re.match(r"^(#{1,6})\s+(.*)", ln)
         if m:
-            lvl = min(len(m.group(1)) + 1, 6)
-            out.append(f"<h{lvl}>{md_inline(m.group(2))}</h{lvl}>"); i += 1; continue
+            lvl, txt = len(m.group(1)), m.group(2)
+            if lvl == 1:
+                close(); out.append(f'<div class="rlead">{md_rich(txt)}</div>')
+            elif lvl == 2:
+                close()
+                acc = SEC_ACCENT[sec_n[0] % len(SEC_ACCENT)]; sec_n[0] += 1
+                out.append(f'<div class="rsec" style="border-left-color:{acc}">'
+                           f'<div class="rsec-h"><span class="si">{sec_icon(txt)}</span>'
+                           f'{md_rich(txt)}</div>')
+                open_sec[0] = True
+            else:
+                out.append(f'<h4 class="rsub">{md_rich(txt)}</h4>')
+            i += 1; continue
         if ln.lstrip().startswith("|") and i + 1 < len(lines) and \
            re.match(r"^\s*\|[-:\s|]+\|\s*$", lines[i + 1]):
             head = [c.strip() for c in ln.strip().strip("|").split("|")]
             i += 2; rows = []
             while i < len(lines) and lines[i].lstrip().startswith("|"):
                 rows.append([c.strip() for c in lines[i].strip().strip("|").split("|")]); i += 1
-            th = "".join(f"<th>{md_inline(c)}</th>" for c in head)
-            trs = "".join("<tr>" + "".join(f"<td>{md_inline(c)}</td>" for c in r) + "</tr>" for r in rows)
+            th = "".join(f"<th>{md_rich(c)}</th>" for c in head)
+            trs = "".join("<tr>" + "".join(f"<td>{md_rich(c)}</td>" for c in r) + "</tr>" for r in rows)
             out.append(f'<div class="tw"><table><thead><tr>{th}</tr></thead><tbody>{trs}</tbody></table></div>')
             continue
         if re.match(r"^\s*[-*]\s+", ln):
             items = []
             while i < len(lines) and re.match(r"^\s*[-*]\s+", lines[i]):
-                items.append("<li>" + md_inline(re.sub(r"^\s*[-*]\s+", "", lines[i])) + "</li>"); i += 1
-            out.append("<ul>" + "".join(items) + "</ul>"); continue
+                items.append("<li>" + md_rich(re.sub(r"^\s*[-*]\s+", "", lines[i])) + "</li>"); i += 1
+            out.append('<ul class="rlist">' + "".join(items) + "</ul>"); continue
         buf = [ln]; i += 1
         while i < len(lines) and lines[i].strip() and \
                 not re.match(r"^(#{1,6}\s|\s*[-*]\s|\s*\||\s*---\s*$)", lines[i]):
             buf.append(lines[i]); i += 1
-        out.append("<p>" + "<br>".join(md_inline(b) for b in buf) + "</p>")
+        out.append("<p>" + "<br>".join(md_rich(b) for b in buf) + "</p>")
+    close()
     return "\n".join(out)
 
 
@@ -499,6 +544,17 @@ details.report>summary::-webkit-details-marker{display:none}
 .report h2{font-size:16px;margin:16px 0 8px;color:#d7ddf4}.report h3{font-size:14px;color:#aeb6d6}
 .report strong{color:#fff}.report code{background:#ffffff14;padding:1px 6px;border-radius:5px;font-size:13px}
 .report hr{border:0;border-top:1px solid var(--line);margin:14px 0}.report p{margin:7px 0;color:#c4cbe4}
+.rlead{font-size:18px;font-weight:800;margin:4px 0 14px;color:#fff;line-height:1.3}
+.rsec{background:var(--card2);border:1px solid var(--line);border-left:3px solid var(--eth);border-radius:14px;padding:11px 15px;margin:12px 0}
+.rsec-h{font-size:14.5px;font-weight:800;color:#e4e9fb;margin-bottom:6px;display:flex;gap:8px;align-items:center}
+.rsec-h .si{font-size:17px}
+.rsub{font-size:13px;color:#aeb6d6;margin:11px 0 5px;font-weight:700}
+.rsec p{margin:6px 0;color:#c7cde2;font-size:14.5px}
+.rlist{margin:6px 0;padding-left:2px;list-style:none}
+.rlist li{position:relative;padding:4px 0 4px 17px;color:#c7cde2;font-size:14.5px}
+.rlist li:before{content:"\\25B8";position:absolute;left:0;color:var(--mut)}
+.report .num{font-family:var(--mono);color:#eaf0ff;background:#ffffff10;padding:0 4px;border-radius:5px;font-size:.93em}
+.pos{color:var(--up)}.neg{color:var(--down)}
 .tw{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:13px}
 th,td{border:1px solid var(--line);padding:5px 8px;text-align:left}th{background:#ffffff0a;color:var(--mut)}
 .arch{display:flex;flex-wrap:wrap;gap:7px}.arch a{color:var(--eth);text-decoration:none;font-size:12px;
