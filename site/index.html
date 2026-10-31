@@ -1,110 +1,119 @@
 <!doctype html>
 <html lang="ru"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex">
-<title>BTC/ETH · 2026-10-31</title>
+<meta name="robots" content="noindex"><title>BTC/ETH · 2026-10-31</title>
 <style>
-:root{--bg:#07090f;--card:#121724;--card2:#1a2132;--bd:#242c3e;--tx:#eef1f7;
---mut:#8b93a7;--btc:#f7931a;--eth:#8b9dff;--up:#34d399;--down:#f87171}
+:root{--bg:#070a16;--ink:#eef1ff;--mut:#99a1c4;--line:#ffffff14;
+--btc:#f7a23b;--eth:#a78bfa;--up:#2dd4a7;--down:#fb7185;--cy:#38bdf8}
 *{box-sizing:border-box}
-body{margin:0;background:radial-gradient(1200px 700px at 50% -15%,#17233f 0%,var(--bg) 55%);
-color:var(--tx);font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
--webkit-font-smoothing:antialiased;padding:0 15px 70px}
+body{margin:0;color:var(--ink);font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+-webkit-font-smoothing:antialiased;background:var(--bg);overflow-x:hidden;padding:0 15px 70px}
+.bgfx{position:fixed;inset:0;z-index:-1;overflow:hidden}
+.bgfx b{position:absolute;border-radius:50%;filter:blur(70px);opacity:.5;animation:drift 22s ease-in-out infinite}
+.bgfx .a{width:420px;height:420px;background:#4f46e5;left:-120px;top:-120px}
+.bgfx .b{width:380px;height:380px;background:#0ea5a3;right:-120px;top:60px;animation-delay:-7s}
+.bgfx .c{width:360px;height:360px;background:#7c3aed;left:30%;bottom:-160px;animation-delay:-13s}
+@keyframes drift{0%,100%{transform:translate(0,0)}50%{transform:translate(40px,30px)}}
 .wrap{max-width:780px;margin:0 auto}
-header{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px;padding:26px 2px 4px}
+header{display:flex;justify-content:space-between;align-items:baseline;gap:6px;flex-wrap:wrap;padding:26px 2px 6px}
 h1{font-size:18px;margin:0;font-weight:800;letter-spacing:.2px}
 .upd{color:var(--mut);font-size:12px}
+.fade{opacity:0;transform:translateY(10px);animation:up .6s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:var(--d,0s)}
+@keyframes up{to{opacity:1;transform:none}}
+.glass{background:linear-gradient(165deg,#ffffff0f,#ffffff06);backdrop-filter:blur(12px);
+border:1px solid var(--line);border-radius:20px}
 .hero{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
-.coin{background:linear-gradient(160deg,var(--card2),var(--card));border:1px solid var(--bd);
-border-radius:20px;padding:16px 18px;position:relative;overflow:hidden}
-.coin .nm{font-weight:800;font-size:13px;letter-spacing:1.5px}
+.coin{position:relative;overflow:hidden;padding:16px 18px}
+.coin .nm{font-weight:800;font-size:12px;letter-spacing:1.6px}
 .coin.btc .nm{color:var(--btc)}.coin.eth .nm{color:var(--eth)}
-.coin .pr{font-size:33px;font-weight:900;margin-top:4px;letter-spacing:-1px}
-.coin .glow{position:absolute;right:-28px;top:-28px;width:110px;height:110px;border-radius:50%;filter:blur(42px);opacity:.4}
+.coin .pr{font-size:32px;font-weight:900;margin-top:3px;letter-spacing:-1px}
+.coin .glow{position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;filter:blur(44px);opacity:.45;animation:pulse 4s ease-in-out infinite}
 .coin.btc .glow{background:var(--btc)}.coin.eth .glow{background:var(--eth)}
-.chg{font-size:14px;font-weight:700}.chg.up{color:var(--up)}.chg.down{color:var(--down)}
-.mood{display:flex;gap:14px;align-items:center;border-radius:18px;padding:16px 18px;margin:12px 0;border:1px solid}
-.mood .mi{font-size:30px}.mood .ml{font-weight:800;font-size:17px}.mood .mh{font-size:14px;opacity:.92;margin-top:2px}
-.mup{background:linear-gradient(120deg,#0e2a1f,#101a2a);border-color:#1f5137}
-.mdn{background:linear-gradient(120deg,#2a1116,#13131f);border-color:#5a2730}
-.mfl{background:linear-gradient(120deg,#20222e,#13131f);border-color:#39405a}
-.sect{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:16px 18px;margin:12px 0}
-.sect h2{font-size:12px;letter-spacing:1.2px;text-transform:uppercase;color:var(--mut);margin:0 0 12px}
+@keyframes pulse{0%,100%{opacity:.35}50%{opacity:.6}}
+.spark{width:100%;height:34px;margin-top:8px;display:block}
+.chg{font-size:13px;font-weight:700}.chg.up{color:var(--up)}.chg.down{color:var(--down)}
+.mood{display:flex;gap:14px;align-items:center;padding:15px 17px;margin:12px 0;border:1px solid var(--line)}
+.mood .mi{font-size:28px}.mood .ml{font-weight:800;font-size:17px}.mood .mh{font-size:13.5px;opacity:.92;margin-top:2px}
+.mup{background:linear-gradient(120deg,#0c2b20cc,#0b1226cc)}.mdn{background:linear-gradient(120deg,#2a1020cc,#0b1226cc)}
+.mfl{background:linear-gradient(120deg,#1a1e34cc,#0b1226cc)}
+.flow{display:flex;gap:13px;align-items:center;padding:13px 16px;margin:12px 0;border:1px solid var(--line);
+background:linear-gradient(120deg,#131a33cc,#0c1328cc)}
+.flow .fi{font-size:22px}.flow .fk{font-size:11px;letter-spacing:.8px;color:var(--cy);text-transform:uppercase}
+.flow .fv{font-weight:600;font-size:14.5px;margin-top:2px}
+.card{padding:16px 18px;margin:12px 0}
+.h{font-size:11.5px;letter-spacing:1.3px;text-transform:uppercase;color:var(--mut);margin-bottom:12px}
 .lvgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .lvc{font-weight:800;font-size:13px;letter-spacing:1px;margin-bottom:6px}
 .lvc.btc{color:var(--btc)}.lvc.eth{color:var(--eth)}
 .lvrow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:5px 0}
 .lk{font-size:11px;color:var(--mut);width:46px}
-.chip{font-size:13px;font-weight:700;padding:3px 9px;border-radius:8px}
-.chip.sup{background:#0f2a20;color:#6ee7b7;border:1px solid #1f5137}
-.chip.res{background:#2a1317;color:#fca5a5;border:1px solid #5a2730}
-.bet{background:var(--card2);border:1px solid var(--bd);border-radius:12px;padding:11px 13px;margin-bottom:9px}
-.bet.big{padding:13px 15px}.bet .bt{font-weight:700;font-size:15px}.bet.big .bt{font-size:16px}
-.bet .bm{color:var(--mut);font-size:12px;margin:3px 0 8px}
-.bar{height:24px;border-radius:8px;background:#0c1220;position:relative;overflow:hidden}
-.fill{height:100%;border-radius:8px;transition:width .7s cubic-bezier(.2,.9,.3,1)}
-.pp{position:absolute;right:10px;top:0;line-height:24px;font-size:12px;font-weight:800}
-.more{margin-top:4px}.more summary{cursor:pointer;color:var(--eth);font-size:13px;font-weight:600;padding:6px 0}
+.chip{font-size:13px;font-weight:700;padding:3px 10px;border-radius:9px}
+.chip.sup{background:#0f2a2199;color:#7ff0cb;border:1px solid #1f5a4588}
+.chip.res{background:#2a131799;color:#ffb0b8;border:1px solid #5a2a3588}
+.bet{display:flex;gap:14px;align-items:center;padding:12px 6px;border-bottom:1px solid var(--line)}
+.bet:last-child{border:0}
+.ring{width:54px;height:54px;flex:none}.ring .rp{animation:dash 1s ease forwards}
+@keyframes dash{from{stroke-dashoffset:163.4}}
+.ring .rt{fill:var(--ink);font-size:16px;font-weight:800}
+.bt{font-weight:650;font-size:15px}.bm{color:var(--mut);font-size:12px;margin-top:3px}
+.more summary{cursor:pointer;color:var(--eth);font-size:13px;font-weight:600;padding:9px 0 3px}
+.betr{font-size:14px;padding:6px 0;border-bottom:1px solid var(--line)}.betr b,.betr span{font-weight:700}
 .macro{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}
-.tile{background:var(--card2);border:1px solid var(--bd);border-radius:12px;padding:9px 6px;text-align:center}
-.tl{color:var(--mut);font-size:10px;letter-spacing:.3px}.tv{font-size:16px;font-weight:800;margin:2px 0}
+.tile{background:#ffffff08;border:1px solid var(--line);border-radius:13px;padding:9px 6px;text-align:center}
+.tl{color:var(--mut);font-size:10px}.tv{font-size:16px;font-weight:800;margin:2px 0}
 .ts{font-size:11px;font-weight:700}.ts.up{color:var(--up)}.ts.down{color:var(--down)}
-.brier{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-.bignum{font-size:34px;font-weight:900;line-height:1}
-.track{flex:1;min-width:160px;height:10px;border-radius:6px;background:#0c1220;position:relative}
-.track .mk{position:absolute;top:-4px;left:50%;width:2px;height:18px;background:var(--mut)}
-.track .dot{position:absolute;top:-3px;width:16px;height:16px;border-radius:50%;transform:translateX(-50%)}
-.bcom{color:var(--mut);font-size:12px;flex-basis:100%}
-.tldr{background:linear-gradient(135deg,#1a2740,#141a2b);border:1px solid #33405f;
-border-radius:20px;padding:18px 20px;margin:16px 0}
-.tldr h2{color:#aab6ff}.tldr ul{margin:0;padding:0;list-style:none}
-.tldr li{font-size:16px;font-weight:600;padding:8px 0;border-bottom:1px solid #222b40}
+.briw{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.bignum{font-size:38px;font-weight:900;line-height:1}
+.histacc{font-size:13px;color:var(--mut)}.histacc b{color:var(--ink);font-size:17px}
+.dots{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.dot{width:11px;height:11px;border-radius:3px;display:inline-block}
+.dot.hit{background:var(--up);box-shadow:0 0 6px #2dd4a780}.dot.miss{background:var(--down)}
+.tldr{padding:18px 20px;margin:16px 0;border:1px solid #3a2f6b;
+background:linear-gradient(135deg,#1b1740cc,#121633cc)}
+.tldr .h{color:#c3b6ff}.tldr ul{margin:0;padding:0;list-style:none}
+.tldr li{font-size:16px;font-weight:600;padding:9px 0;border-bottom:1px solid #ffffff12}
 .tldr li:last-child{border:0}
-details.report{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:4px 18px;margin:12px 0}
-details.report summary{cursor:pointer;font-size:13px;font-weight:700;color:var(--mut);padding:13px 0;letter-spacing:.5px;text-transform:uppercase}
-.report h2{font-size:16px;margin:16px 0 8px;color:#cdd3e0}.report h3{font-size:14px;color:#aeb6c6}
-.report strong{color:#fff}.report code{background:#0c1220;padding:1px 6px;border-radius:5px;font-size:13px}
-.report hr{border:0;border-top:1px solid var(--bd);margin:14px 0}.report p{margin:7px 0;color:#c2c9d6}
+details.report{padding:4px 18px;margin:12px 0}
+details.report>summary{cursor:pointer;font-size:12px;font-weight:700;color:var(--mut);padding:13px 0;letter-spacing:.6px;text-transform:uppercase;list-style:none}
+details.report>summary::-webkit-details-marker{display:none}
+.report h2{font-size:16px;margin:16px 0 8px;color:#d7ddf4}.report h3{font-size:14px;color:#aeb6d6}
+.report strong{color:#fff}.report code{background:#ffffff14;padding:1px 6px;border-radius:5px;font-size:13px}
+.report hr{border:0;border-top:1px solid var(--line);margin:14px 0}.report p{margin:7px 0;color:#c4cbe4}
 .tw{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:13px}
-th,td{border:1px solid var(--bd);padding:5px 8px;text-align:left}th{background:#0c1220;color:var(--mut)}
+th,td{border:1px solid var(--line);padding:5px 8px;text-align:left}th{background:#ffffff0a;color:var(--mut)}
 .arch{display:flex;flex-wrap:wrap;gap:7px}.arch a{color:var(--eth);text-decoration:none;font-size:12px;
-background:var(--card2);border:1px solid var(--bd);padding:3px 9px;border-radius:8px}
+background:#ffffff08;border:1px solid var(--line);padding:3px 9px;border-radius:9px}
+.muted{color:var(--mut)}
 .disc{color:var(--mut);font-size:11px;text-align:center;margin-top:22px}
 @media(max-width:540px){.hero,.lvgrid{grid-template-columns:1fr}.macro{grid-template-columns:repeat(3,1fr)}
-.coin .pr{font-size:30px}.tldr li{font-size:15px}}
+.coin .pr{font-size:29px}.tldr li{font-size:15px}}
+@media(prefers-reduced-motion:reduce){.fade,.bgfx b,.coin .glow,.ring .rp{animation:none;opacity:1;transform:none}}
 </style></head>
-<body><div class="wrap">
-<header><h1>📈 BTC / ETH · 2026-10-31</h1><span class="upd">⟳ 31.10 09:16</span></header>
+<body><div class="bgfx"><b class="a"></b><b class="b"></b><b class="c"></b></div>
+<div class="wrap">
+<header><h1>📈 BTC / ETH · 2026-10-31</h1><span class="upd">⟳ 31.10 09:45</span></header>
 
 <div class="hero">
-  <div class="coin btc"><div class="glow"></div><div class="nm">BITCOIN</div>
-    <div class="pr">$77,507</div></div>
-  <div class="coin eth"><div class="glow"></div><div class="nm">ETHEREUM</div>
-    <div class="pr">$2,249</div></div>
+  <div class="coin btc glass fade" style="--d:0s"><div class="glow"></div>
+    <div class="nm">BITCOIN</div><div class="pr">$77,465</div><svg class="spark" viewBox="0 0 100 30" preserveAspectRatio="none"><defs><linearGradient id="gu" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--up)" stop-opacity=".35"/><stop offset="1" stop-color="var(--up)" stop-opacity="0"/></linearGradient></defs><polygon points="0,30 0.0,8.0 1.4,6.8 2.8,5.9 4.2,3.0 5.6,4.3 6.9,4.2 8.3,4.6 9.7,4.3 11.1,5.6 12.5,11.0 13.9,11.2 15.3,11.8 16.7,9.8 18.1,9.9 19.4,11.2 20.8,11.8 22.2,10.7 23.6,10.1 25.0,9.6 26.4,10.3 27.8,10.8 29.2,9.5 30.6,5.1 31.9,2.0 33.3,4.6 34.7,6.5 36.1,6.7 37.5,6.7 38.9,16.7 40.3,16.0 41.7,16.3 43.1,21.6 44.4,25.2 45.8,27.3 47.2,24.2 48.6,20.2 50.0,20.1 51.4,18.6 52.8,18.1 54.2,20.4 55.6,21.3 56.9,22.8 58.3,22.1 59.7,24.3 61.1,23.9 62.5,25.6 63.9,25.1 65.3,23.1 66.7,24.4 68.1,25.3 69.4,28.0 70.8,26.7 72.2,26.7 73.6,27.8 75.0,26.6 76.4,24.5 77.8,23.5 79.2,24.3 80.6,24.0 81.9,25.4 83.3,25.3 84.7,24.9 86.1,24.3 87.5,24.4 88.9,24.4 90.3,23.8 91.7,24.1 93.1,23.1 94.4,23.5 95.8,23.6 97.2,24.0 98.6,23.2 100.0,23.2 100,30" fill="url(#gu)"/><polyline points="0.0,8.0 1.4,6.8 2.8,5.9 4.2,3.0 5.6,4.3 6.9,4.2 8.3,4.6 9.7,4.3 11.1,5.6 12.5,11.0 13.9,11.2 15.3,11.8 16.7,9.8 18.1,9.9 19.4,11.2 20.8,11.8 22.2,10.7 23.6,10.1 25.0,9.6 26.4,10.3 27.8,10.8 29.2,9.5 30.6,5.1 31.9,2.0 33.3,4.6 34.7,6.5 36.1,6.7 37.5,6.7 38.9,16.7 40.3,16.0 41.7,16.3 43.1,21.6 44.4,25.2 45.8,27.3 47.2,24.2 48.6,20.2 50.0,20.1 51.4,18.6 52.8,18.1 54.2,20.4 55.6,21.3 56.9,22.8 58.3,22.1 59.7,24.3 61.1,23.9 62.5,25.6 63.9,25.1 65.3,23.1 66.7,24.4 68.1,25.3 69.4,28.0 70.8,26.7 72.2,26.7 73.6,27.8 75.0,26.6 76.4,24.5 77.8,23.5 79.2,24.3 80.6,24.0 81.9,25.4 83.3,25.3 84.7,24.9 86.1,24.3 87.5,24.4 88.9,24.4 90.3,23.8 91.7,24.1 93.1,23.1 94.4,23.5 95.8,23.6 97.2,24.0 98.6,23.2 100.0,23.2" fill="none" stroke="var(--up)" stroke-width="1.6" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></svg></div>
+  <div class="coin eth glass fade" style="--d:.07s"><div class="glow"></div>
+    <div class="nm">ETHEREUM</div><div class="pr">$2,249</div><svg class="spark" viewBox="0 0 100 30" preserveAspectRatio="none"><defs><linearGradient id="gu" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--up)" stop-opacity=".35"/><stop offset="1" stop-color="var(--up)" stop-opacity="0"/></linearGradient></defs><polygon points="0,30 0.0,7.3 1.4,6.0 2.8,4.4 4.2,2.0 5.6,3.6 6.9,3.1 8.3,3.8 9.7,3.9 11.1,4.5 12.5,10.5 13.9,10.8 15.3,11.3 16.7,9.5 18.1,9.2 19.4,10.6 20.8,11.1 22.2,9.9 23.6,9.5 25.0,8.4 26.4,9.0 27.8,9.3 29.2,8.6 30.6,6.1 31.9,2.5 33.3,4.7 34.7,6.5 36.1,7.9 37.5,7.1 38.9,18.6 40.3,16.4 41.7,16.3 43.1,19.7 44.4,24.0 45.8,28.0 47.2,25.8 48.6,21.9 50.0,21.0 51.4,21.6 52.8,19.5 54.2,21.7 55.6,22.9 56.9,22.7 58.3,19.9 59.7,21.8 61.1,22.0 62.5,23.4 63.9,21.7 65.3,23.2 66.7,22.3 68.1,20.8 69.4,22.6 70.8,21.6 72.2,21.5 73.6,21.7 75.0,22.0 76.4,20.7 77.8,20.0 79.2,20.8 80.6,20.5 81.9,21.5 83.3,21.5 84.7,21.0 86.1,20.6 87.5,20.8 88.9,21.1 90.3,20.6 91.7,20.7 93.1,20.1 94.4,19.5 95.8,19.7 97.2,20.5 98.6,19.8 100.0,19.5 100,30" fill="url(#gu)"/><polyline points="0.0,7.3 1.4,6.0 2.8,4.4 4.2,2.0 5.6,3.6 6.9,3.1 8.3,3.8 9.7,3.9 11.1,4.5 12.5,10.5 13.9,10.8 15.3,11.3 16.7,9.5 18.1,9.2 19.4,10.6 20.8,11.1 22.2,9.9 23.6,9.5 25.0,8.4 26.4,9.0 27.8,9.3 29.2,8.6 30.6,6.1 31.9,2.5 33.3,4.7 34.7,6.5 36.1,7.9 37.5,7.1 38.9,18.6 40.3,16.4 41.7,16.3 43.1,19.7 44.4,24.0 45.8,28.0 47.2,25.8 48.6,21.9 50.0,21.0 51.4,21.6 52.8,19.5 54.2,21.7 55.6,22.9 56.9,22.7 58.3,19.9 59.7,21.8 61.1,22.0 62.5,23.4 63.9,21.7 65.3,23.2 66.7,22.3 68.1,20.8 69.4,22.6 70.8,21.6 72.2,21.5 73.6,21.7 75.0,22.0 76.4,20.7 77.8,20.0 79.2,20.8 80.6,20.5 81.9,21.5 83.3,21.5 84.7,21.0 86.1,20.6 87.5,20.8 88.9,21.1 90.3,20.6 91.7,20.7 93.1,20.1 94.4,19.5 95.8,19.7 97.2,20.5 98.6,19.8 100.0,19.5" fill="none" stroke="var(--up)" stroke-width="1.6" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></svg></div>
 </div>
 
-<div class="mood mdn"><div class="mi">🩸</div><div><div class="ml">Под давлением</div><div class="mh">BTC ниже 20-дневной средней, акции валятся — крипте тяжело расти.</div></div></div>
+<div class="mood mdn fade" style="--d:.05s"><div class="mi">🩸</div><div><div class="ml">Под давлением</div><div class="mh">BTC ниже 20-дневной средней, акции валятся — крипте тяжело расти.</div></div></div>
+<div class="flow fade" style="--d:.1s"><span class="fi">🧠</span><div><div class="fk">Поток умных денег</div><div class="fv">Крупные игроки берут путы: put/call по объёму 4.25, покупки ноябрьских путов $58k. Скью +7…13 — страховка от падения дороже, рынок боится вниз.</div></div></div>
+<div class="card fade" style="--d:.15s"><div class="h">Ключевые уровни</div><div class="lvgrid"><div><div class="lvc btc">BTC</div><div class="lvrow"><span class="lk">держит</span><span class="chip sup">$76.2k</span><span class="chip sup">$75k</span></div><div class="lvrow"><span class="lk">мешает</span><span class="chip res">$78k</span><span class="chip res">$80k</span></div></div><div><div class="lvc eth">ETH</div><div class="lvrow"><span class="lk">держит</span><span class="chip sup">$2.20k</span><span class="chip sup">$2.17k</span></div><div class="lvrow"><span class="lk">мешает</span><span class="chip res">$2.35k</span><span class="chip res">$2.43k</span></div></div></div></div>
 
-<div class="sect"><h2>Ключевые уровни</h2>
-        <div class="lvgrid">
-          <div><div class="lvc btc">BTC</div>
-            <div class="lvrow"><span class="lk">держит</span><span class="chip sup">$76.2k</span><span class="chip sup">$75k</span></div>
-            <div class="lvrow"><span class="lk">мешает</span><span class="chip res">$78k</span><span class="chip res">$80k</span></div></div>
-          <div><div class="lvc eth">ETH</div>
-            <div class="lvrow"><span class="lk">держит</span><span class="chip sup">$2.20k</span><span class="chip sup">$2.17k</span></div>
-            <div class="lvrow"><span class="lk">мешает</span><span class="chip res">$2.35k</span><span class="chip res">$2.43k</span></div></div>
-        </div></div>
+<div class="card glass fade" style="--d:.2s"><div class="h">🎯 Главные ставки дня</div><div class="bet"><svg class="ring" viewBox="0 0 64 64"><circle cx="32" cy="32" r="26" stroke="#ffffff14" stroke-width="7" fill="none"/><circle class="rp" cx="32" cy="32" r="26" stroke="#56b3f5" stroke-width="7" fill="none" stroke-linecap="round" stroke-dasharray="163.4" stroke-dashoffset="138.9" transform="rotate(-90 32 32)"/><text x="32" y="37" text-anchor="middle" class="rt">15%</text></svg><div class="bi"><div class="bt">ETH-PERPETUAL коснётся ≥ $2,350</div><div class="bm">до до 31.10 23:59 PDT</div></div></div><div class="bet"><svg class="ring" viewBox="0 0 64 64"><circle cx="32" cy="32" r="26" stroke="#ffffff14" stroke-width="7" fill="none"/><circle class="rp" cx="32" cy="32" r="26" stroke="#56b3f5" stroke-width="7" fill="none" stroke-linecap="round" stroke-dasharray="163.4" stroke-dashoffset="135.6" transform="rotate(-90 32 32)"/><text x="32" y="37" text-anchor="middle" class="rt">17%</text></svg><div class="bi"><div class="bt">BTC-PERPETUAL коснётся ≥ $80,000</div><div class="bm">до до 31.10 23:59 PDT</div></div></div><div class="bet"><svg class="ring" viewBox="0 0 64 64"><circle cx="32" cy="32" r="26" stroke="#ffffff14" stroke-width="7" fill="none"/><circle class="rp" cx="32" cy="32" r="26" stroke="#56b3f5" stroke-width="7" fill="none" stroke-linecap="round" stroke-dasharray="163.4" stroke-dashoffset="134.0" transform="rotate(-90 32 32)"/><text x="32" y="37" text-anchor="middle" class="rt">18%</text></svg><div class="bi"><div class="bt">ETH-PERPETUAL коснётся ≥ $2,350</div><div class="bm">до до 01.11 23:59 PST</div></div></div><details class="more"><summary>Ещё ставки · 8</summary><div class="betr"><span style="color:#56b3f5">22%</span> ETH-PERPETUAL коснётся ≤ $2,150 <span class="muted">· до до 01.11 23:59 PST</span></div><div class="betr"><span style="color:#56b3f5">27%</span> ETH-PERPETUAL коснётся ≤ $2,100 <span class="muted">· до до 31.10 23:59 PDT</span></div><div class="betr"><span style="color:#56b3f5">30%</span> BTC-PERPETUAL коснётся ≤ $75,500 <span class="muted">· до до 01.11 23:59 PST</span></div><div class="betr"><span style="color:#56b3f5">35%</span> BTC-PERPETUAL коснётся ≥ $79,000 <span class="muted">· до до 01.11 23:59 PST</span></div><div class="betr"><span style="color:#2dd4a7">65%</span> Дневная свеча BTC-PERPETUAL (UTC-сутки 31.10) закроется выше $77,000 <span class="muted">· до 31.10 17:00 PDT</span></div><div class="betr"><span style="color:#fbbf5a">40%</span> BTC (индекс) при экспирации 06.11 08:00 UTC выше $78,000 <span class="muted">· до 06.11 00:00 PST</span></div><div class="betr"><span style="color:#fbbf5a">40%</span> ETH (индекс) при экспирации 06.11 08:00 UTC выше $2,300 <span class="muted">· до 07.11 00:00 PST</span></div><div class="betr"><span style="color:#fbbf5a">45%</span> BTC-PERPETUAL коснётся ≤ $75,000 <span class="muted">· до до 31.10 23:59 PDT</span></div></details></div>
 
-<div class="sect"><h2>🎯 Главные ставки дня</h2><div class="bet big"><div class="bt">ETH-PERPETUAL коснётся ≥ $2,350</div><div class="bm">до до 31.10 23:59 PDT</div><div class="bar"><div class="fill" style="width:15%;background:#60a5fa"></div><span class="pp">15%</span></div></div><div class="bet big"><div class="bt">BTC-PERPETUAL коснётся ≥ $80,000</div><div class="bm">до до 31.10 23:59 PDT</div><div class="bar"><div class="fill" style="width:17%;background:#60a5fa"></div><span class="pp">17%</span></div></div><div class="bet big"><div class="bt">ETH-PERPETUAL коснётся ≥ $2,350</div><div class="bm">до до 01.11 23:59 PST</div><div class="bar"><div class="fill" style="width:18%;background:#60a5fa"></div><span class="pp">18%</span></div></div><details class="more"><summary>Ещё прогнозы · 8</summary><div class="bet"><div class="bt">ETH-PERPETUAL коснётся ≤ $2,150</div><div class="bm">до до 01.11 23:59 PST</div><div class="bar"><div class="fill" style="width:22%;background:#60a5fa"></div><span class="pp">22%</span></div></div><div class="bet"><div class="bt">ETH-PERPETUAL коснётся ≤ $2,100</div><div class="bm">до до 31.10 23:59 PDT</div><div class="bar"><div class="fill" style="width:27%;background:#60a5fa"></div><span class="pp">27%</span></div></div><div class="bet"><div class="bt">BTC-PERPETUAL коснётся ≤ $75,500</div><div class="bm">до до 01.11 23:59 PST</div><div class="bar"><div class="fill" style="width:30%;background:#60a5fa"></div><span class="pp">30%</span></div></div><div class="bet"><div class="bt">BTC-PERPETUAL коснётся ≥ $79,000</div><div class="bm">до до 01.11 23:59 PST</div><div class="bar"><div class="fill" style="width:35%;background:#60a5fa"></div><span class="pp">35%</span></div></div><div class="bet"><div class="bt">Дневная свеча BTC-PERPETUAL (UTC-сутки 31.10) закроется выше $77,000</div><div class="bm">до 31.10 17:00 PDT</div><div class="bar"><div class="fill" style="width:65%;background:#34d399"></div><span class="pp">65%</span></div></div><div class="bet"><div class="bt">BTC (индекс) при экспирации 06.11 08:00 UTC выше $78,000</div><div class="bm">до 06.11 00:00 PST</div><div class="bar"><div class="fill" style="width:40%;background:#fbbf24"></div><span class="pp">40%</span></div></div><div class="bet"><div class="bt">ETH (индекс) при экспирации 06.11 08:00 UTC выше $2,300</div><div class="bm">до 07.11 00:00 PST</div><div class="bar"><div class="fill" style="width:40%;background:#fbbf24"></div><span class="pp">40%</span></div></div><div class="bet"><div class="bt">BTC-PERPETUAL коснётся ≤ $75,000</div><div class="bm">до до 31.10 23:59 PDT</div><div class="bar"><div class="fill" style="width:45%;background:#fbbf24"></div><span class="pp">45%</span></div></div></details></div>
+<div class="card glass fade" style="--d:.25s"><div class="h">Макро · на закрытии</div><div class="macro"><div class="tile"><div class="tl">S&P 500</div><div class="tv">7,744</div><div class="ts up">+0.28%</div></div><div class="tile"><div class="tl">Nasdaq</div><div class="tv">26,185</div><div class="ts down">-1.38%</div></div><div class="tile"><div class="tl">10Y</div><div class="tv">4.98%</div><div class="ts down">-7б.п.</div></div><div class="tile"><div class="tl">WTI</div><div class="tv">103</div><div class="ts down">-1.79%</div></div><div class="tile"><div class="tl">VIX</div><div class="tv">17.20</div><div class="ts up">+1.71%</div></div></div></div>
 
-<div class="sect"><h2>Макро · на закрытии</h2><div class="macro"><div class="tile"><div class="tl">S&P 500</div><div class="tv">7,744</div><div class="ts up">+0.28%</div></div><div class="tile"><div class="tl">Nasdaq</div><div class="tv">26,185</div><div class="ts down">-1.38%</div></div><div class="tile"><div class="tl">10Y</div><div class="tv">4.98%</div><div class="ts down">-7б.п.</div></div><div class="tile"><div class="tl">WTI</div><div class="tv">103</div><div class="ts down">-1.79%</div></div><div class="tile"><div class="tl">VIX</div><div class="tv">17.20</div><div class="ts up">+1.71%</div></div></div></div>
+<div class="card glass fade" style="--d:.3s"><div class="h">Точность прогнозов</div>
+  <div class="briw"><div class="bignum" style="color:#fbbf5a">0.292</div>
+  <div style="flex:1;min-width:150px"><div class="histacc"><b>53%</b> попаданий · 9/17</div><div class="dots"><i class="dot hit"></i><i class="dot miss"></i><i class="dot hit"></i><i class="dot miss"></i><i class="dot hit"></i><i class="dot hit"></i><i class="dot miss"></i><i class="dot hit"></i><i class="dot miss"></i><i class="dot hit"></i><i class="dot miss"></i><i class="dot miss"></i><i class="dot hit"></i><i class="dot hit"></i><i class="dot miss"></i><i class="dot miss"></i><i class="dot hit"></i></div></div></div>
+  <div class="muted" style="font-size:12px;margin-top:10px">Брайер 0.292 · 17 закрытых · 0 — идеально, 0.25 — как монетка.</div></div>
 
-<div class="sect"><h2>Насколько точны прогнозы</h2>
-  <div class="brier"><div class="bignum" style="color:#fbbf24">0.292</div>
-  <div class="track"><div class="mk"></div><div class="dot" style="left:58.4%;background:#fbbf24"></div></div>
-  <div class="bcom">17 закрытых · 0 — идеально, 0.25 — как монетка. Чем ниже, тем лучше.</div></div></div>
-
-<details class="report"><summary>📄 Полный отчёт — развернуть</summary><h2>Прогноз BTC/ETH на 2026-10-31 (сб), составлен 05:14 PDT (America/Vancouver)</h2>
+<details class="report glass"><summary>📄 Полный отчёт — развернуть</summary><h2>Прогноз BTC/ETH на 2026-10-31 (сб), составлен 05:14 PDT (America/Vancouver)</h2>
 <h3>1. Итог прошлых прогнозов и Брайер-скор</h3>
 <p>Закрыт сегодня:</p>
 <ul><li><strong>№19</strong> — дневная свеча BTC-PERPETUAL (UTC-сутки 30.10) закрылась на $77,247.5 (&lt; $78,000) → <strong>сбылось</strong>, p=0.68, Брайер 0.1024.</li></ul>
@@ -125,9 +134,8 @@ background:var(--card2);border:1px solid var(--bd);padding:3px 9px;border-radius
 <p><strong>Уровни BTC</strong>: поддержка $76,178 (мин. 30.10), $75,000 (пут-страйк), $74,920 (45-дн. мин.); сопротивление $78,000 (вчерашний пик), $80,000 (max pain), $80,474 (EMA20), $82,000 (крупнейший колл-страйк).<br><strong>Уровни ETH</strong>: поддержка $2,204 / $2,170 (мин. 29.10), $2,100 (крупнейший пут); сопротивление $2,259, $2,350 (max pain), $2,371 (EMA20), $2,400/$2,500 (коллы).</p>
 <p>Я не финансовый советник, это эксперимент с прогнозами, а не торговый сигнал</p></details>
 
-<div class="sect"><h2>Архив</h2><div class="arch"><a href="https://github.com/polkadot88888888-coder/btc-eth-daily-forecast/blob/main/reports/2026-10-31.md" target="_blank" rel="noopener">2026-10-31</a><a href="https://github.com/polkadot88888888-coder/btc-eth-daily-forecast/blob/main/reports/2026-10-30.md" target="_blank" rel="noopener">2026-10-30</a><a href="https://github.com/polkadot88888888-coder/btc-eth-daily-forecast/blob/main/reports/2026-10-29.md" target="_blank" rel="noopener">2026-10-29</a><a href="https://github.com/polkadot88888888-coder/btc-eth-daily-forecast/blob/main/reports/2026-10-28.md" target="_blank" rel="noopener">2026-10-28</a><a href="https://github.com/polkadot88888888-coder/btc-eth-daily-forecast/blob/main/reports/2026-10-27_night.md" target="_blank" rel="noopener">2026-10-27_night</a><a href="https://github.com/polkadot88888888-coder/btc-eth-daily-forecast/blob/main/reports/2026-10-27_evening.md" target="_blank" rel="noopener">2026-10-27_evening</a><a href="https://github.com/polkadot88888888-coder/btc-eth-daily-forecast/blob/main/reports/2026-10-27.md" target="_blank" rel="noopener">2026-10-27</a></div></div>
+<div class="card glass"><div class="h">Архив</div><div class="arch"><a href="https://github.com/polkadot88888888-coder/btc-eth-daily-forecast/blob/main/reports/2026-10-31.md" target="_blank" rel="noopener">2026-10-31</a><a href="https://github.com/polkadot88888888-coder/btc-eth-daily-forecast/blob/main/reports/2026-10-30.md" target="_blank" rel="noopener">2026-10-30</a><a href="https://github.com/polkadot88888888-coder/btc-eth-daily-forecast/blob/main/reports/2026-10-29.md" target="_blank" rel="noopener">2026-10-29</a><a href="https://github.com/polkadot88888888-coder/btc-eth-daily-forecast/blob/main/reports/2026-10-28.md" target="_blank" rel="noopener">2026-10-28</a><a href="https://github.com/polkadot88888888-coder/btc-eth-daily-forecast/blob/main/reports/2026-10-27_night.md" target="_blank" rel="noopener">2026-10-27_night</a><a href="https://github.com/polkadot88888888-coder/btc-eth-daily-forecast/blob/main/reports/2026-10-27_evening.md" target="_blank" rel="noopener">2026-10-27_evening</a><a href="https://github.com/polkadot88888888-coder/btc-eth-daily-forecast/blob/main/reports/2026-10-27.md" target="_blank" rel="noopener">2026-10-27</a></div></div>
 
-<div class="tldr"><h2>⚡ Короче говоря</h2><ul><li>📉 BTC ~$77.5k — под 20-дневной средней, тренд слабый.</li><li>🩸 Акции рухнули: Nasdaq −2.9%, тянут крипту вниз.</li><li>🧲 Опционы: max pain $78k — магнит к пятничной экспирации.</li><li>🎯 Главная ставка дня: дневная свеча BTC выше $77k — 65%.</li><li>🎓 Точность прогнозов пока 0.29 (Брайер) — учимся на дистанции.</li></ul></div>
-
+<div class="tldr glass"><div class="h">⚡ Короче говоря</div><ul><li>📉 BTC ~$77.5k — под 20-дневной средней, тренд слабый.</li><li>🩸 Акции рухнули: Nasdaq −2.9%, тянут крипту вниз.</li><li>🧲 Опционы: max pain $78k — магнит к пятничной экспирации.</li><li>🎯 Главная ставка дня: дневная свеча BTC выше $77k — 65%.</li><li>🎓 Точность прогнозов пока 0.29 (Брайер) — учимся на дистанции.</li></ul></div>
 <div class="disc">Я не финансовый советник · это эксперимент с прогнозами, а не торговый сигнал</div>
 </div></body></html>
