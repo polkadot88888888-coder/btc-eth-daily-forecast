@@ -1,6 +1,6 @@
 {
-  "fetched_at_utc": "2026-10-30 16:51:02Z",
-  "fetched_at_unix": 1793379062,
+  "fetched_at_utc": "2026-10-31 15:54:13Z",
+  "fetched_at_unix": 1793462053,
   "source": "FRED (Federal Reserve Bank of St. Louis), EOD",
   "note": "Данные на конец торгового дня, не live-котировки.",
   "data": {
@@ -18,23 +18,23 @@
     },
     "DJIA": {
       "name": "Dow Jones (индекс)",
-      "date": "2026-10-29",
-      "value": 52342.56,
-      "pct_change": -0.25
+      "date": "2026-10-30",
+      "value": 51770.31,
+      "pct_change": -1.09
     },
     "DGS10": {
       "name": "UST 10Y доходность, %",
-      "date": "2026-10-28",
-      "value": 5.05,
-      "change_bp": 6.0,
-      "pct_change": 1.2
+      "date": "2026-10-29",
+      "value": 4.98,
+      "change_bp": -7.0,
+      "pct_change": -1.39
     },
     "DGS2": {
       "name": "UST 2Y доходность, %",
-      "date": "2026-10-28",
-      "value": 4.67,
-      "change_bp": -3.0,
-      "pct_change": -0.64
+      "date": "2026-10-29",
+      "value": 4.61,
+      "change_bp": -6.0,
+      "pct_change": -1.28
     },
     "DTWEXBGS": {
       "name": "Индекс доллара (широкий)",
