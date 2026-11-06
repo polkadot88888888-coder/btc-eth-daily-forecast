@@ -1,40 +1,40 @@
 {
-  "fetched_at_utc": "2026-11-05 18:22:50Z",
-  "fetched_at_unix": 1793902970,
+  "fetched_at_utc": "2026-11-06 17:43:46Z",
+  "fetched_at_unix": 1793987026,
   "source": "FRED (Federal Reserve Bank of St. Louis), EOD",
   "note": "Данные на конец торгового дня, не live-котировки.",
   "data": {
     "SP500": {
       "name": "S&P 500 (индекс)",
-      "date": "2026-11-03",
-      "value": 7568.92,
-      "pct_change": 0.36
+      "date": "2026-11-05",
+      "value": 7353.73,
+      "pct_change": -4.36
     },
     "NASDAQCOM": {
       "name": "Nasdaq Composite (индекс)",
-      "date": "2026-11-04",
-      "value": 25736.51,
-      "pct_change": 1.44
+      "date": "2026-11-05",
+      "value": 24315.0,
+      "pct_change": -5.52
     },
     "DJIA": {
       "name": "Dow Jones (индекс)",
-      "date": "2026-11-04",
-      "value": 53356.12,
-      "pct_change": 3.03
+      "date": "2026-11-05",
+      "value": 51523.06,
+      "pct_change": -3.44
     },
     "DGS10": {
       "name": "UST 10Y доходность, %",
-      "date": "2026-11-03",
-      "value": 4.95,
-      "change_bp": 4.0,
-      "pct_change": 0.81
+      "date": "2026-11-04",
+      "value": 4.9,
+      "change_bp": -5.0,
+      "pct_change": -1.01
     },
     "DGS2": {
       "name": "UST 2Y доходность, %",
-      "date": "2026-11-03",
-      "value": 4.61,
-      "change_bp": 2.0,
-      "pct_change": 0.44
+      "date": "2026-11-04",
+      "value": 4.58,
+      "change_bp": -3.0,
+      "pct_change": -0.65
     },
     "DTWEXBGS": {
       "name": "Индекс доллара (широкий)",
@@ -56,9 +56,9 @@
     },
     "VIXCLS": {
       "name": "VIX (волатильность акций)",
-      "date": "2026-11-04",
-      "value": 16.61,
-      "pct_change": -20.26
+      "date": "2026-11-05",
+      "value": 28.18,
+      "pct_change": 69.66
     }
   },
   "errors": {}
