@@ -549,7 +549,7 @@ def build():
         btc_price=fmt_price(btc.get("price")), btc_chg=chg(btc.get("chg"), btc_up),
         eth_price=fmt_price(eth.get("price")), eth_chg=chg(eth.get("chg"), eth_up),
         charts=charts, mood=mood_html, flow=flow_html,
-        derivs=render_derivs({**load_json("derivs.json"), **(card.get("derivs") or {})}),
+        derivs=render_derivs(load_json("derivs.json") or card.get("derivs")),
         crossasset=render_crossasset(load_json("crossasset.json")), levels=lvl_html,
         top=top or '<p class="muted">Открытых ставок нет.</p>', rest=rest_block,
         macro=macro_tiles(macro), brier=html.escape(str(brier["score"])), bcol=bcol,
