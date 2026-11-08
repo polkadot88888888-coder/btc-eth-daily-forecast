@@ -104,6 +104,23 @@ def main():
     top_calls = sorted(calls.items(), key=lambda x: -x[1])[:5]
     top_puts = sorted(puts.items(), key=lambda x: -x[1])[:5]
 
+    # Дамп для веб-дашборда (рисует карту опционных стен).
+    import os
+    out = {
+        "currency": currency, "expiry": date_str, "code": target,
+        "spot": spot, "max_pain": mp, "pc": round(pc, 2),
+        "call_oi": round(call_oi, 1), "put_oi": round(put_oi, 1),
+        "wall_call": (top_calls[0][0] if top_calls else None),
+        "wall_put": (top_puts[0][0] if top_puts else None),
+        "strikes": [{"k": k, "c": round(calls.get(k, 0), 1), "p": round(puts.get(k, 0), 1)}
+                    for k in strikes],
+        "updated": int(datetime.now(timezone.utc).timestamp()),
+    }
+    _root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    os.makedirs(os.path.join(_root, "data"), exist_ok=True)
+    json.dump(out, open(os.path.join(_root, "data", f"options_{currency}.json"), "w"),
+              ensure_ascii=False, indent=2)
+
     print(f"=== {currency} · экспирация {date_str} ({target}) ===")
     if spot:
         print(f"Индекс-цена сейчас: ${spot:,.0f}")

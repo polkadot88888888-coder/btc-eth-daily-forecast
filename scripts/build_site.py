@@ -570,6 +570,69 @@ def render_strikemap(flow, spot):
             + (f'<div class="smnote">{md_inline(note)}</div>' if note else "") + "</div>")
 
 
+def render_options_walls(o):
+    """Карта опционных стен: OI коллов (вверх, зелёные) и путов (вниз, красные) по страйкам."""
+    if not o or not isinstance(o, dict) or not o.get("strikes"):
+        return ""
+    spot, mp = o.get("spot"), o.get("max_pain")
+    ref = spot or mp
+    if not ref:
+        return ""
+    strikes = o["strikes"]
+    maxoi = max((s["c"] + s["p"]) for s in strikes) or 1
+    kept = [s for s in strikes if (s["c"] + s["p"]) >= maxoi * 0.03
+            and ref * 0.80 <= s["k"] <= ref * 1.20]
+    if len(kept) > 18:
+        kept = sorted(sorted(kept, key=lambda s: -(s["c"] + s["p"]))[:18], key=lambda s: s["k"])
+    kept.sort(key=lambda s: s["k"])
+    if not kept:
+        return ""
+    xs = [s["k"] for s in kept] + [v for v in (spot, mp) if v]
+    lo, hi = min(xs), max(xs)
+    pad = (hi - lo) * 0.06 or hi * 0.01
+    lo, hi = lo - pad, hi + pad
+    L, Rr, top, half = 30, 332, 30, 56
+    y0 = top + half
+    H = y0 + half + 24
+    def X(v):
+        return L + (v - lo) / (hi - lo) * (Rr - L)
+    maxbar = max(max(s["c"] for s in kept), max(s["p"] for s in kept)) or 1
+    bw = max(3.0, min(15.0, (Rr - L) / len(kept) * 0.55))
+    S = [f'<svg viewBox="0 0 340 {H}" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="JetBrains Mono,monospace">']
+    S.append(f'<line x1="{L}" y1="{y0}" x2="{Rr}" y2="{y0}" stroke="#2b3160" stroke-width="1"/>')
+    for s in kept:
+        x = X(s["k"])
+        ch = s["c"] / maxbar * half
+        ph = s["p"] / maxbar * half
+        if ch > 0.4:
+            S.append(f'<rect x="{x-bw/2:.1f}" y="{y0-ch:.1f}" width="{bw:.1f}" height="{ch:.1f}" rx="1.5" fill="#2ff4ad" opacity="0.85"/>')
+        if ph > 0.4:
+            S.append(f'<rect x="{x-bw/2:.1f}" y="{y0:.1f}" width="{bw:.1f}" height="{ph:.1f}" rx="1.5" fill="#ff5c8a" opacity="0.85"/>')
+    # вертикальные линии max pain (амбер) и спот (циан), подписи сверху в две строки
+    if mp:
+        xm = X(mp)
+        S.append(f'<line x1="{xm:.0f}" y1="{top-6}" x2="{xm:.0f}" y2="{y0+half}" stroke="#ffb23e" stroke-width="1.2" stroke-dasharray="3 3"/>')
+        S.append(f'<text x="{xm:.0f}" y="{top-13}" fill="#ffb23e" font-size="9" text-anchor="middle">max pain ${mp/1000:.0f}k</text>')
+    if spot:
+        xsp = X(spot)
+        S.append(f'<line x1="{xsp:.0f}" y1="{top-6}" x2="{xsp:.0f}" y2="{y0+half}" stroke="#25e0ff" stroke-width="1.3" stroke-dasharray="4 3"/>')
+        S.append(f'<text x="{xsp:.0f}" y="{top-4}" fill="#25e0ff" font-size="9" text-anchor="middle">спот ${spot/1000:.1f}k</text>')
+    # ценовые засечки по краям оси (далеко от центра — без наложений)
+    for v in (lo + pad, hi - pad):
+        x = X(v)
+        S.append(f'<text x="{x:.0f}" y="{y0+half+12:.0f}" fill="#9aa0cf" font-size="8.5" text-anchor="middle">${v/1000:.0f}k</text>')
+    S.append("</svg>")
+    pc = o.get("pc")
+    code = html.escape(str(o.get("code", "")))
+    sub = (f'<div class="owsub">Экспирация {code} · P/C {pc} · '
+           f'стены ${(o.get("wall_put") or 0)/1000:.0f}k / ${(o.get("wall_call") or 0)/1000:.0f}k · '
+           f'магнит к max pain ${(mp or 0)/1000:.0f}k</div>')
+    return ('<div class="card fade" style="--d:.16s"><div class="h">🧱 Опционные стены · BTC</div>'
+            + "".join(S) + sub +
+            '<div class="smlegend"><span class="smd buy"></span>коллы — сопротивление сверху'
+            '<span class="smd sell"></span>путы — поддержка снизу</div></div>')
+
+
 def build():
     name, md = latest_report()
     date = (name or "").replace(".md", "")
@@ -657,7 +720,8 @@ def build():
         derivs=render_derivs(load_json("derivs.json") or card.get("derivs")),
         crossasset=render_crossasset(load_json("crossasset.json")),
         directions=render_directions(load_json("directions.json")),
-        strikemap=render_strikemap(card.get("flow"), (btc.get("price") or 0)), levels=lvl_html,
+        strikemap=render_strikemap(card.get("flow"), (btc.get("price") or 0)),
+        optionwalls=render_options_walls(load_json("options_BTC.json")), levels=lvl_html,
         top=top or '<p class="muted">Открытых ставок нет.</p>', rest=rest_block,
         macro=macro_tiles(macro), brier=html.escape(str(brier["score"])), bcol=bcol,
         brier_count=html.escape(str(brier["count"])), history=history_strip(closed),
@@ -776,6 +840,7 @@ background:linear-gradient(180deg,#8b5cff14,#8b5cff06)}
 .dirconf{font-weight:500;opacity:.8;margin-left:4px}
 .dirwhy{font-size:12.5px;color:var(--mut);margin-top:6px;line-height:1.5}
 .dirnote{font-size:11.5px;color:var(--mut);margin-top:10px;font-style:italic;opacity:.85}
+.owsub{font-size:12px;color:var(--mut);margin-top:6px;line-height:1.5}
 .tl{color:var(--mut);font-size:10px}.tv{font-size:16px;font-weight:800;margin:2px 0}
 .ts{font-size:11px;font-weight:700;font-family:var(--mono)}.ts.up{color:var(--up)}.ts.down{color:var(--down)}
 .briw{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
@@ -865,6 +930,7 @@ def PAGE(**v):
 {v['mood']}
 {v['flow']}
 {v['strikemap']}
+{v['optionwalls']}
 {v['derivs']}
 {v['crossasset']}
 {v['directions']}
