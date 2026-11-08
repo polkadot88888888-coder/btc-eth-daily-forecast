@@ -1,0 +1,35 @@
+{
+  "tiles": [
+    {
+      "label": "Золото XAU",
+      "val": "$4,072",
+      "pct": "—",
+      "up": true
+    },
+    {
+      "label": "EUR/USD",
+      "val": "1.1163",
+      "pct": "-0.02%",
+      "up": false
+    },
+    {
+      "label": "USD/JPY",
+      "val": "157.47",
+      "pct": "-0.23%",
+      "up": false
+    },
+    {
+      "label": "GBP/USD",
+      "val": "1.3398",
+      "pct": "+0.17%",
+      "up": true
+    }
+  ],
+  "corr": {
+    "corr": 0.74,
+    "beta": 0.82,
+    "days": 20,
+    "word": "сильно связан — идёт за акциями"
+  },
+  "updated": 1794118365
+}

@@ -56,28 +56,35 @@ curl -s "https://www.deribit.com/api/v2/public/get_tradingview_chart_data?instru
    так и подавай их («акции на закрытии <date>…»). Проверь `fetched_at_utc`: если снимок
    старше ~2 суток или `data` пуст — значит Action не отработал, напиши «макро: данных нет».
    Для сегодняшнего настроения рынка (фьючерсы «прямо сейчас», тон ФРС) дополняй это WebSearch.
+   - **Кросс-активы — готовый файл `data/crossasset.json`** (Action `scripts/crossasset.py`):
+     ```
+     cat data/crossasset.json   # tiles: золото XAU + Forex (EUR/USD, USD/JPY, GBP/USD);
+                                # corr: корреляция и бета BTC↔Nasdaq за ~20 дней + словесно
+     ```
+     Используй корреляцию BTC↔Nasdaq: если она высокая (≥0.6) — BTC идёт за акциями, и
+     движение Nasdaq сегодня важнее крипто-факторов; если низкая/отрицательная — крипта живёт
+     своей жизнью. Золото/доллар — для макрорежима (риск-офф → золото вверх, доллар вверх).
 3. **Крипта (Deribit, BTC-PERPETUAL / ETH-PERPETUAL)**:
    - свечи 48 ч (resolution=60) и дневные 45 дней (resolution=1D):
      `get_tradingview_chart_data?instrument_name=BTC-PERPETUAL&resolution=60&start_timestamp=<мс>&end_timestamp=<мс>`;
    - реальные экстремумы со временем, EMA20;
    - индекс-цена: `get_index_price?index_name=btc_usd` (и `eth_usd`);
-   - funding + OI + 24ч статы: `get_ticker?instrument_name=BTC-PERPETUAL`
-     (поля `funding_8h`, `open_interest`, `mark_price`, `stats.high/low/volume`);
+   - funding + OI + 24ч статы: `ticker?instrument_name=BTC-PERPETUAL`
+     (метод именно `ticker`, НЕ `get_ticker`; поля `funding_8h`, `open_interest`,
+     `mark_price`, `stats.high/low/volume`);
      отметь динамику OI (рост OI при плоской цене = топливо для движения в любую сторону);
    - вчерашний дневной диапазон и текущий ночной коридор (из часовых свечей);
    - DVOL: `get_volatility_index_data?currency=BTC&start_timestamp=<мс>&end_timestamp=<мс>&resolution=1D`;
    Все URL с префиксом `https://www.deribit.com/api/v2/public/`.
-   - **Ликвидации и агрегированный OI (коннектор DOUBLETOP/Coinalyze)** — у рутины подключён
-     коннектор `DOUBLETOP`. Вызови его инструменты (аргумент `symbols` — строка
-     `"BTCUSD_PERP.A,ETHUSD_PERP.A"`, `interval:"1hour"`, окно ~24-48 ч):
-     - `coinalyze__liquidation_history` → по часам `l` = ликвидации лонгов (USD),
-       `s` = ликвидации шортов (USD). Сложи за 24 ч: что выбивало сильнее (лонги/шорты),
-       был ли резкий всплеск-каскад и на какой свече (совпал ли с экстремумом цены).
-     - `coinalyze__open_interest_history` → агрегированный OI по всем биржам (в USD);
-       посчитай изменение за 24 ч в % и сопоставь с ценой (OI растёт + цена стоит =
-       набор позиций/топливо; OI падает + цена падает = закрытие лонгов, делёвередж).
-     - `coinalyze__long_short_ratio_history` и `coinalyze__funding_rate_history` — если нужно
-       подтвердить перекос толпы. Если коннектор недоступен — так и напиши, не выдумывай цифры.
+   - **Деривативы (OI, ликвидации, funding) — готовый файл `data/derivs.json`.**
+     Его собирает GitHub Action (`scripts/derivs.py`) ДО запуска рутины, напрямую из
+     публичных источников — **никакого стороннего MCP-коннектора не нужно**. Просто читай:
+     ```
+     cat data/derivs.json   # oi, oi_chg, liq24, liq_side, funding, verdict, source
+     ```
+     `source` = `coinalyze` (агрегированный OI по биржам + ликвидации, если задан ключ
+     COINALYZE_API_KEY) или `deribit` (OI + funding без ключа, запасной путь). Используй
+     эти числа в разделе «Рынок сейчас»; если поле пустое (null) — просто не упоминай его.
 4. **Потоки в спотовые BTC/ETH-ETF** за последние дни:
    `https://www.tftc.io/bitcoin-etf-flows/latest.json` (если недоступен — возьми из WebSearch).
 5. **События дня и недели со временем** (в America/Vancouver): CPI, PPI, PCE, NFP, заявки по

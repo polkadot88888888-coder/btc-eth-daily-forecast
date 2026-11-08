@@ -122,6 +122,14 @@ def load_macro():
     return json.load(open(p, encoding="utf-8")) if os.path.exists(p) else {}
 
 
+def load_json(name):
+    p = os.path.join(ROOT, "data", name)
+    try:
+        return json.load(open(p, encoding="utf-8"))
+    except Exception:
+        return {}
+
+
 def live_prices():
     out = {}
     for sym, k in (("BTC-PERPETUAL", "BTC"), ("ETH-PERPETUAL", "ETH")):
@@ -417,12 +425,44 @@ def render_derivs(d):
         tiles += (f'<div class="tile"><div class="tl">Funding</div>'
                   f'<div class="tv mono">{md_inline(str(fnd))}</div>'
                   f'<div class="ts {"up" if up else "down"}">8ч</div></div>')
+    dv = d.get("dvol")
+    if dv:
+        tiles += (f'<div class="tile"><div class="tl">DVOL · воля</div>'
+                  f'<div class="tv mono">{md_inline(str(dv))}</div>'
+                  f'<div class="ts mut">ожид.</div></div>')
     if not tiles:
         return ""
     verdict = (f'<div class="dvv">{md_inline(d.get("verdict",""))}</div>'
                if d.get("verdict") else "")
     return ('<div class="card fade" style="--d:.17s"><div class="h">⚙️ Деривативы · 24ч</div>'
             f'<div class="macro dv">{tiles}</div>{verdict}</div>')
+
+
+def render_crossasset(ca):
+    """Карточка кросс-активов: золото, Forex и связь BTC ↔ Nasdaq."""
+    if not ca or not isinstance(ca, dict):
+        return ""
+    tiles = ""
+    for t in ca.get("tiles") or []:
+        cls = "up" if t.get("up") else "down"
+        tiles += (f'<div class="tile"><div class="tl">{md_inline(str(t.get("label","")))}</div>'
+                  f'<div class="tv mono">{md_inline(str(t.get("val","")))}</div>'
+                  f'<div class="ts {cls}">{md_inline(str(t.get("pct","")))}</div></div>')
+    if not tiles:
+        return ""
+    cb = ca.get("corr") or {}
+    corr_html = ""
+    if cb.get("corr") is not None:
+        c = cb["corr"]
+        col = "--up" if c >= 0.3 else "--down" if c <= -0.3 else "--cy"
+        corr_html = (
+            '<div class="corrbox"><div class="corrk">🔗 BTC ↔ Nasdaq · ~{d} дн.</div>'
+            '<div class="corrv"><b class="mono" style="color:var({col})">{c:+.2f}</b> '
+            'корреляция · бета <b class="mono">{b:+.2f}</b></div>'
+            '<div class="corrw">{w}</div></div>'
+        ).format(d=cb.get("days", 20), col=col, c=c, b=cb.get("beta", 0), w=md_inline(cb.get("word", "")))
+    return ('<div class="card fade" style="--d:.19s"><div class="h">🌐 Кросс-активы</div>'
+            f'<div class="macro ca">{tiles}</div>{corr_html}</div>')
 
 
 def build():
@@ -508,7 +548,9 @@ def build():
         date=html.escape(date), updated=html.escape(updated),
         btc_price=fmt_price(btc.get("price")), btc_chg=chg(btc.get("chg"), btc_up),
         eth_price=fmt_price(eth.get("price")), eth_chg=chg(eth.get("chg"), eth_up),
-        charts=charts, mood=mood_html, flow=flow_html, derivs=render_derivs(card.get("derivs")), levels=lvl_html,
+        charts=charts, mood=mood_html, flow=flow_html,
+        derivs=render_derivs({**load_json("derivs.json"), **(card.get("derivs") or {})}),
+        crossasset=render_crossasset(load_json("crossasset.json")), levels=lvl_html,
         top=top or '<p class="muted">Открытых ставок нет.</p>', rest=rest_block,
         macro=macro_tiles(macro), brier=html.escape(str(brier["score"])), bcol=bcol,
         brier_count=html.escape(str(brier["count"])), history=history_strip(closed),
@@ -595,10 +637,17 @@ background:linear-gradient(180deg,#1d1733,#120f26);box-shadow:0 0 26px -9px #f59
 .betr{font-size:14px;padding:6px 0;border-bottom:1px solid var(--line)}
 .macro{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}
 .tile{background:var(--card2);border:1px solid var(--line);border-radius:13px;padding:9px 6px;text-align:center}
-.macro.dv{grid-template-columns:repeat(3,1fr)}
+.macro.dv{grid-template-columns:repeat(auto-fit,minmax(88px,1fr))}
 .macro.dv .tile{border-color:#25e0ff33}
 .dvv{font-size:13px;color:var(--mut);margin-top:10px;line-height:1.5}
 .ts.mut{color:var(--mut)}
+.macro.ca{grid-template-columns:repeat(4,1fr)}
+.macro.ca .tile{border-color:#b17cff33}
+.corrbox{margin-top:12px;padding:12px 14px;border:1px solid #8b5cff44;border-radius:14px;
+background:linear-gradient(180deg,#8b5cff14,#8b5cff06)}
+.corrk{font-size:11px;letter-spacing:.5px;color:var(--mut);text-transform:uppercase}
+.corrv{font-size:15px;font-weight:700;margin-top:4px}
+.corrw{font-size:12.5px;color:var(--mut);margin-top:3px}
 .tl{color:var(--mut);font-size:10px}.tv{font-size:16px;font-weight:800;margin:2px 0}
 .ts{font-size:11px;font-weight:700;font-family:var(--mono)}.ts.up{color:var(--up)}.ts.down{color:var(--down)}
 .briw{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
@@ -688,6 +737,7 @@ def PAGE(**v):
 {v['mood']}
 {v['flow']}
 {v['derivs']}
+{v['crossasset']}
 {v['levels']}
 
 <div class="card fade" style="--d:.2s"><div class="h">🎯 Главные ставки дня</div>{v['top']}{v['rest']}</div>
