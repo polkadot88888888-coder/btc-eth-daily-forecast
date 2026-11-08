@@ -450,19 +450,95 @@ def render_crossasset(ca):
                   f'<div class="ts {cls}">{md_inline(str(t.get("pct","")))}</div></div>')
     if not tiles:
         return ""
-    cb = ca.get("corr") or {}
-    corr_html = ""
-    if cb.get("corr") is not None:
-        c = cb["corr"]
-        col = "--up" if c >= 0.3 else "--down" if c <= -0.3 else "--cy"
-        corr_html = (
-            '<div class="corrbox"><div class="corrk">🔗 BTC ↔ Nasdaq · ~{d} дн.</div>'
-            '<div class="corrv"><b class="mono" style="color:var({col})">{c:+.2f}</b> '
-            'корреляция · бета <b class="mono">{b:+.2f}</b></div>'
-            '<div class="corrw">{w}</div></div>'
-        ).format(d=cb.get("days", 20), col=col, c=c, b=cb.get("beta", 0), w=md_inline(cb.get("word", "")))
+    radar = ca.get("radar") or []
+    rows = ""
+    for x in radar:
+        asset = md_inline(str(x.get("asset", "")))
+        if x.get("corr") is None:
+            rows += (f'<div class="radrow"><span class="rasset">{asset}</span>'
+                     f'<span class="rmut">{md_inline(str(x.get("status","—")))}</span></div>')
+            continue
+        c = x["corr"]
+        d = x.get("dir", "flat")
+        arrow = {"up": "▲", "down": "▼"}.get(d, "•")
+        dcls = {"up": "up", "down": "down"}.get(d, "mut")
+        ccol = "--up" if c >= 0.3 else "--down" if c <= -0.3 else "--mut"
+        rows += (f'<div class="radrow"><span class="rasset">{asset}</span>'
+                 f'<span class="rcorr mono" style="color:var({ccol})">{c:+.2f}</span>'
+                 f'<span class="rbias {dcls}">{arrow} {md_inline(str(x.get("word","")))}</span></div>')
+    radar_html = ""
+    if rows:
+        radar_html = ('<div class="radar"><div class="radk">🧭 Радар корреляций · куда тянет BTC '
+                      '<span class="rmut">(~20 дн.)</span></div>' + rows + '</div>')
     return ('<div class="card fade" style="--d:.19s"><div class="h">🌐 Кросс-активы</div>'
-            f'<div class="macro ca">{tiles}</div>{corr_html}</div>')
+            f'<div class="macro ca">{tiles}</div>{radar_html}</div>')
+
+
+def _parse_strike(s):
+    s = str(s).replace("$", "").replace(",", "").strip().lower()
+    mult = 1.0
+    if s.endswith("k"):
+        mult, s = 1000.0, s[:-1]
+    elif s.endswith("m"):
+        mult, s = 1e6, s[:-1]
+    try:
+        return float(s) * mult
+    except ValueError:
+        return None
+
+
+def render_strikemap(flow, spot):
+    """Карта страйков: где киты продали (красным) / купили (зелёным) относительно цены."""
+    if not flow or not isinstance(flow, dict) or not spot:
+        return ""
+    pts = []
+    for t in (flow.get("trades") or [])[:6]:
+        k = _parse_strike(t.get("k", ""))
+        if k:
+            pts.append((k, t))
+    if not pts:
+        return ""
+    ks = [k for k, _ in pts] + [spot]
+    lo, hi = min(ks), max(ks)
+    pad = (hi - lo) * 0.14 or hi * 0.02
+    lo, hi = lo - pad, hi + pad
+    L, R = 48, 330
+    def X(v):
+        return L + (v - lo) / (hi - lo) * (R - L)
+    rowH, top = 25, 20
+    H = top + len(pts) * rowH + 26
+    axisY = H - 20
+    S = [f'<svg viewBox="0 0 340 {H}" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="JetBrains Mono,monospace">']
+    # ось цены
+    S.append(f'<line x1="{L}" y1="{axisY}" x2="{R}" y2="{axisY}" stroke="#2b3160" stroke-width="1"/>')
+    for v in (lo + pad, (lo + hi) / 2, hi - pad):
+        x = X(v)
+        S.append(f'<line x1="{x:.0f}" y1="{axisY}" x2="{x:.0f}" y2="{axisY+4}" stroke="#2b3160"/>')
+        S.append(f'<text x="{x:.0f}" y="{axisY+15}" fill="#9aa0cf" font-size="9" text-anchor="middle">${v/1000:.0f}k</text>')
+    # линия спота
+    xs = X(spot)
+    S.append(f'<line x1="{xs:.0f}" y1="{top-6}" x2="{xs:.0f}" y2="{axisY}" stroke="#25e0ff" stroke-width="1.3" stroke-dasharray="4 3" opacity="0.9"/>')
+    S.append(f'<text x="{xs:.0f}" y="{top-9}" fill="#25e0ff" font-size="9" text-anchor="middle">спот ${spot/1000:.1f}k</text>')
+    for i, (k, t) in enumerate(pts):
+        y = top + i * rowH + 10
+        x = X(k)
+        sell = str(t.get("s", "")).startswith("s")
+        col = "#ff5c8a" if sell else "#2ff4ad"
+        word = "прод" if sell else "куп"
+        S.append(f'<line x1="{x:.0f}" y1="{y}" x2="{x:.0f}" y2="{axisY}" stroke="{col}" stroke-width="1" opacity="0.3"/>')
+        S.append(f'<circle cx="{x:.0f}" cy="{y}" r="4.5" fill="{col}"/>')
+        label = f'{word} {html.escape(str(t.get("t","")))} {html.escape(str(t.get("e","")))} · {html.escape(str(t.get("sz","")))}'
+        if x > 210:
+            S.append(f'<text x="{x-9:.0f}" y="{y+3.5:.0f}" fill="{col}" font-size="9.5" text-anchor="end">{label}</text>')
+        else:
+            S.append(f'<text x="{x+9:.0f}" y="{y+3.5:.0f}" fill="{col}" font-size="9.5">{label}</text>')
+    S.append("</svg>")
+    note = html.escape(str(flow.get("note", "")))
+    return ('<div class="card fade" style="--d:.11s"><div class="h">🗺️ Карта китов · где продают/покупают</div>'
+            + "".join(S) +
+            '<div class="smlegend"><span class="smd sell"></span>продано (ставка против)'
+            '<span class="smd buy"></span>куплено (ставка за)</div>'
+            + (f'<div class="smnote">{md_inline(note)}</div>' if note else "") + "</div>")
 
 
 def build():
@@ -550,7 +626,8 @@ def build():
         eth_price=fmt_price(eth.get("price")), eth_chg=chg(eth.get("chg"), eth_up),
         charts=charts, mood=mood_html, flow=flow_html,
         derivs=render_derivs(load_json("derivs.json") or card.get("derivs")),
-        crossasset=render_crossasset(load_json("crossasset.json")), levels=lvl_html,
+        crossasset=render_crossasset(load_json("crossasset.json")),
+        strikemap=render_strikemap(card.get("flow"), (btc.get("price") or 0)), levels=lvl_html,
         top=top or '<p class="muted">Открытых ставок нет.</p>', rest=rest_block,
         macro=macro_tiles(macro), brier=html.escape(str(brier["score"])), bcol=bcol,
         brier_count=html.escape(str(brier["count"])), history=history_strip(closed),
@@ -643,11 +720,20 @@ background:linear-gradient(180deg,#1d1733,#120f26);box-shadow:0 0 26px -9px #f59
 .ts.mut{color:var(--mut)}
 .macro.ca{grid-template-columns:repeat(4,1fr)}
 .macro.ca .tile{border-color:#b17cff33}
-.corrbox{margin-top:12px;padding:12px 14px;border:1px solid #8b5cff44;border-radius:14px;
+.radar{margin-top:12px;padding:12px 14px;border:1px solid #8b5cff44;border-radius:14px;
 background:linear-gradient(180deg,#8b5cff14,#8b5cff06)}
-.corrk{font-size:11px;letter-spacing:.5px;color:var(--mut);text-transform:uppercase}
-.corrv{font-size:15px;font-weight:700;margin-top:4px}
-.corrw{font-size:12.5px;color:var(--mut);margin-top:3px}
+.radk{font-size:11px;letter-spacing:.5px;color:var(--mut);text-transform:uppercase;margin-bottom:8px}
+.radrow{display:flex;align-items:center;gap:10px;padding:6px 0;border-top:1px solid #ffffff10}
+.radrow:first-of-type{border-top:none}
+.rasset{flex:0 0 96px;font-weight:700;font-size:13px}
+.rcorr{flex:0 0 52px;font-weight:800;font-size:14px;text-align:right}
+.rbias{flex:1;font-size:12.5px}
+.rbias.up{color:var(--up)}.rbias.down{color:var(--down)}.rbias.mut{color:var(--mut)}
+.rmut{color:var(--mut);font-size:12px;font-weight:400}
+.smlegend{display:flex;align-items:center;gap:7px;flex-wrap:wrap;font-size:11.5px;color:var(--mut);margin-top:8px}
+.smd{width:9px;height:9px;border-radius:50%;display:inline-block;margin-left:10px}
+.smd.sell{background:var(--down)}.smd.buy{background:var(--up)}
+.smnote{font-size:12.5px;color:var(--mut);margin-top:7px;line-height:1.5}
 .tl{color:var(--mut);font-size:10px}.tv{font-size:16px;font-weight:800;margin:2px 0}
 .ts{font-size:11px;font-weight:700;font-family:var(--mono)}.ts.up{color:var(--up)}.ts.down{color:var(--down)}
 .briw{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
@@ -736,6 +822,7 @@ def PAGE(**v):
 
 {v['mood']}
 {v['flow']}
+{v['strikemap']}
 {v['derivs']}
 {v['crossasset']}
 {v['levels']}

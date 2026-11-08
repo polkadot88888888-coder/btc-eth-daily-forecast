@@ -67,6 +67,10 @@ def gold_tile():
     pp = prev.get("gold")
     pct = (price - pp) / pp * 100 if pp else None
     prev["gold"] = price
+    # Копим дневную историю золота (для корреляции — бесплатного дневного ряда нет).
+    hist = prev.get("gold_hist") or {}
+    hist[time.strftime("%Y-%m-%d", time.gmtime())] = price
+    prev["gold_hist"] = dict(sorted(hist.items())[-60:])
     json.dump(prev, open(STATE, "w"))
     return {"label": "Золото XAU", "val": f"${price:,.0f}",
             "pct": (f"{pct:+.2f}%" if pct is not None else "—"),
@@ -86,40 +90,73 @@ def btc_daily(days=45):
     return out
 
 
-def corr_beta():
-    """Pearson-корреляция и бета дневных доходностей BTC к Nasdaq (~20 дней)."""
-    try:
-        ndx = dict(fred_series("NASDAQCOM", limit=45))
-        btc = btc_daily(45)
-    except Exception as e:
-        print("corr fail:", e)
+def corr_vs(btc, series):
+    """Корреляция, бета и последнее дневное движение актива к BTC (~20 дней).
+    series — dict date->value. Возвращает (corr, beta, last_move_%, days) или None."""
+    days = sorted(set(series) & set(btc))
+    if len(days) < 10:
         return None
-    days = sorted(set(ndx) & set(btc))
-    if len(days) < 12:
-        return None
-    rb, rn = [], []
+    rb, ra = [], []
     for a, b in zip(days[:-1], days[1:]):
-        if ndx[a] and btc[a]:
-            rn.append((ndx[b] - ndx[a]) / ndx[a])
+        if series[a] and btc[a]:
+            ra.append((series[b] - series[a]) / series[a])
             rb.append((btc[b] - btc[a]) / btc[a])
-    rb, rn = rb[-20:], rn[-20:]
+    rb, ra = rb[-20:], ra[-20:]
     if len(rb) < 8:
         return None
     try:
-        corr = statistics.correlation(rb, rn)
-        beta = statistics.covariance(rb, rn) / statistics.variance(rn)
-    except Exception as e:
-        print("stat fail:", e)
+        corr = statistics.correlation(rb, ra)
+        beta = statistics.covariance(rb, ra) / statistics.variance(ra)
+    except Exception:
         return None
-    if corr >= 0.6:
-        word = "сильно связан — идёт за акциями"
-    elif corr >= 0.3:
-        word = "умеренно связан с акциями"
-    elif corr <= -0.3:
-        word = "движется против акций"
-    else:
-        word = "живёт своей жизнью, слабая связь с акциями"
-    return {"corr": round(corr, 2), "beta": round(beta, 2), "days": len(rb), "word": word}
+    last_date = days[-1]
+    days_old = int((time.time() - time.mktime(time.strptime(last_date, "%Y-%m-%d"))) // 86400)
+    return round(corr, 2), round(beta, 2), round(ra[-1] * 100, 2), len(rb), days_old
+
+
+def gold_hist_series():
+    try:
+        return {k: v for k, v in (json.load(open(STATE)).get("gold_hist") or {}).items()}
+    except Exception:
+        return {}
+
+
+def direction(corr, move, days_old):
+    """Куда исторически тянет BTC при последнем движении актива."""
+    if days_old > 4:
+        return "flat", f"связь {corr:+.2f}; данные FRED запаздывают ~{days_old}дн — смотри свежий график"
+    if abs(corr) < 0.3 or move is None or abs(move) < 0.05:
+        return "flat", "связь слабая — явного сигнала нет"
+    bias = corr * move                      # знак corr × знак движения актива
+    if bias > 0:
+        return "up", "тянет BTC вверх"
+    return "down", "давит BTC вниз"
+
+
+def radar(btc):
+    """BTC против Nasdaq, доллара (DXY), VIX и золота: связь + куда тянет сегодня."""
+    specs = [
+        ("Nasdaq", lambda: dict(fred_series("NASDAQCOM", 45)), "акции"),
+        ("DXY (доллар)", lambda: dict(fred_series("DTWEXBGS", 45)), "доллар"),
+        ("VIX (страх)", lambda: dict(fred_series("VIXCLS", 45)), "волатильность акций"),
+        ("Золото", gold_hist_series, "защитный актив"),
+    ]
+    out = []
+    for name, getter, kind in specs:
+        try:
+            ser = getter()
+        except Exception as e:
+            print(name, "fail:", e)
+            ser = {}
+        r = corr_vs(btc, ser) if ser else None
+        if not r:
+            out.append({"asset": name, "kind": kind, "status": "накопление данных"})
+            continue
+        corr, beta, move, n, days_old = r
+        d, word = direction(corr, move, days_old)
+        out.append({"asset": name, "kind": kind, "corr": corr, "beta": beta,
+                    "move": move, "dir": d, "word": word, "days": n, "stale": days_old > 4})
+    return out
 
 
 def main():
@@ -130,8 +167,23 @@ def main():
         fx_tile("DEXJPUS", "USD/JPY"),
         fx_tile("DEXUSUK", "GBP/USD"),
     ) if t]
-    cb = corr_beta()
-    data = {"tiles": tiles, "corr": cb, "updated": int(time.time())}
+    try:
+        btc = btc_daily(45)
+    except Exception as e:
+        print("btc daily fail:", e)
+        btc = {}
+    rad = radar(btc) if btc else []
+    # Обратная совместимость: корреляция с Nasdaq отдельным полем.
+    nd = next((x for x in rad if x["asset"] == "Nasdaq" and "corr" in x), None)
+    cb = None
+    if nd:
+        c = nd["corr"]
+        word = ("сильно связан — идёт за акциями" if c >= 0.6 else
+                "умеренно связан с акциями" if c >= 0.3 else
+                "движется против акций" if c <= -0.3 else
+                "живёт своей жизнью, слабая связь с акциями")
+        cb = {"corr": c, "beta": nd["beta"], "days": nd["days"], "word": word}
+    data = {"tiles": tiles, "corr": cb, "radar": rad, "updated": int(time.time())}
     json.dump(data, open(OUT, "w"), ensure_ascii=False, indent=2)
     print("crossasset.json:", json.dumps(data, ensure_ascii=False))
 
