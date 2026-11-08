@@ -41,12 +41,17 @@ jobs:
           COINALYZE_API_KEY: ${{ secrets.COINALYZE_API_KEY }}
         run: python3 scripts/derivs.py || echo "derivs failed, skip"
 
+      - name: Compute daily directions (dollar, gold, BTC)
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+        run: python3 scripts/directions.py || echo "directions failed, skip"
+
       - name: Commit and push
         run: |
           git config user.name "macro-bot"
           git config user.email "macro-bot@users.noreply.github.com"
           git add data/macro.json data/crossasset.json data/crossasset_state.json \
-                  data/derivs.json data/derivs_state.json 2>/dev/null || true
+                  data/derivs.json data/derivs_state.json data/directions.json 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "No data changes"
           else

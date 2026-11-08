@@ -474,6 +474,35 @@ def render_crossasset(ca):
             f'<div class="macro ca">{tiles}</div>{radar_html}</div>')
 
 
+def render_directions(dd):
+    """Направление дня по доллару, золоту и BTC из кросс-активного давления."""
+    if not dd or not isinstance(dd, dict):
+        return ""
+    assets = dd.get("assets") or []
+    if not assets:
+        return ""
+    badge = {"up": ("▲", "ВВЕРХ", "up"), "down": ("▼", "ВНИЗ", "down"),
+             "flat": ("◆", "нейтрально", "mut")}
+    rows = ""
+    for a in assets:
+        ar, word, cls = badge.get(a.get("dir", "flat"), badge["flat"])
+        mv = a.get("move")
+        mvh = ""
+        if mv is not None:
+            mvh = f'<span class="chg {"up" if mv >= 0 else "down"}">{mv:+.2f}%</span>'
+        lvl = html.escape(str(a.get("level") or ""))
+        rows += (
+            '<div class="dirrow">'
+            f'<div class="dirhead"><span class="dirn">{md_inline(str(a.get("name","")))}</span>'
+            f'<span class="dirlvl mono">{lvl} {mvh}</span></div>'
+            f'<div class="dirbadge {cls}">{ar} {word}<span class="dirconf">· {md_inline(str(a.get("conf","")))}</span></div>'
+            f'<div class="dirwhy">почему: {md_inline(str(a.get("why","")))}</div>'
+            '</div>')
+    note = md_inline(str(dd.get("note", "")))
+    return ('<div class="card fade" style="--d:.18s"><div class="h">🎯 Направление дня · доллар · золото · BTC</div>'
+            f'{rows}<div class="dirnote">{note}</div></div>')
+
+
 def _parse_strike(s):
     s = str(s).replace("$", "").replace(",", "").strip().lower()
     mult = 1.0
@@ -627,6 +656,7 @@ def build():
         charts=charts, mood=mood_html, flow=flow_html,
         derivs=render_derivs(load_json("derivs.json") or card.get("derivs")),
         crossasset=render_crossasset(load_json("crossasset.json")),
+        directions=render_directions(load_json("directions.json")),
         strikemap=render_strikemap(card.get("flow"), (btc.get("price") or 0)), levels=lvl_html,
         top=top or '<p class="muted">Открытых ставок нет.</p>', rest=rest_block,
         macro=macro_tiles(macro), brier=html.escape(str(brier["score"])), bcol=bcol,
@@ -734,6 +764,18 @@ background:linear-gradient(180deg,#8b5cff14,#8b5cff06)}
 .smd{width:9px;height:9px;border-radius:50%;display:inline-block;margin-left:10px}
 .smd.sell{background:var(--down)}.smd.buy{background:var(--up)}
 .smnote{font-size:12.5px;color:var(--mut);margin-top:7px;line-height:1.5}
+.dirrow{padding:11px 0;border-top:1px solid #ffffff10}
+.dirrow:first-of-type{border-top:none;padding-top:2px}
+.dirhead{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.dirn{font-weight:800;font-size:14px}
+.dirlvl{font-size:13px;color:var(--mut)}
+.dirbadge{display:inline-block;margin-top:6px;font-weight:800;font-size:13px;padding:3px 10px;border-radius:999px}
+.dirbadge.up{color:var(--up);background:#2ff4ad1a;border:1px solid #2ff4ad44}
+.dirbadge.down{color:var(--down);background:#ff5c8a1a;border:1px solid #ff5c8a44}
+.dirbadge.mut{color:var(--mut);background:#9aa0cf14;border:1px solid #9aa0cf33}
+.dirconf{font-weight:500;opacity:.8;margin-left:4px}
+.dirwhy{font-size:12.5px;color:var(--mut);margin-top:6px;line-height:1.5}
+.dirnote{font-size:11.5px;color:var(--mut);margin-top:10px;font-style:italic;opacity:.85}
 .tl{color:var(--mut);font-size:10px}.tv{font-size:16px;font-weight:800;margin:2px 0}
 .ts{font-size:11px;font-weight:700;font-family:var(--mono)}.ts.up{color:var(--up)}.ts.down{color:var(--down)}
 .briw{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
@@ -825,6 +867,7 @@ def PAGE(**v):
 {v['strikemap']}
 {v['derivs']}
 {v['crossasset']}
+{v['directions']}
 {v['levels']}
 
 <div class="card fade" style="--d:.2s"><div class="h">🎯 Главные ставки дня</div>{v['top']}{v['rest']}</div>
