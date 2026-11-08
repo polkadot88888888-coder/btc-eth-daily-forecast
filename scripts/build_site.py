@@ -393,6 +393,38 @@ def render_flow(fl):
             f'<div class="fchips">{chips}</div>{rows}{note}</div>')
 
 
+def render_derivs(d):
+    """Плитки деривативов: OI, изменение OI, ликвидации, funding (из Coinalyze)."""
+    if not d or not isinstance(d, dict):
+        return ""
+    tiles = ""
+    oi, oic = d.get("oi"), d.get("oi_chg")
+    if oi:
+        up = not str(oic or "").lstrip().startswith("-")
+        sub = f'<div class="ts {"up" if up else "down"}">{md_inline(str(oic))}</div>' if oic else ""
+        tiles += (f'<div class="tile"><div class="tl">Открытый интерес</div>'
+                  f'<div class="tv mono">{md_inline(str(oi))}</div>{sub}</div>')
+    liq, side = d.get("liq24"), d.get("liq_side", "")
+    if liq:
+        sl = str(side).lower()
+        cls = "down" if "лонг" in sl else "up" if "шорт" in sl else "mut"
+        tiles += (f'<div class="tile"><div class="tl">Ликвидации 24ч</div>'
+                  f'<div class="tv mono">{md_inline(str(liq))}</div>'
+                  f'<div class="ts {cls}">{md_inline(str(side))}</div></div>')
+    fnd = d.get("funding")
+    if fnd:
+        up = not str(fnd).lstrip().startswith("-")
+        tiles += (f'<div class="tile"><div class="tl">Funding</div>'
+                  f'<div class="tv mono">{md_inline(str(fnd))}</div>'
+                  f'<div class="ts {"up" if up else "down"}">8ч</div></div>')
+    if not tiles:
+        return ""
+    verdict = (f'<div class="dvv">{md_inline(d.get("verdict",""))}</div>'
+               if d.get("verdict") else "")
+    return ('<div class="card fade" style="--d:.17s"><div class="h">⚙️ Деривативы · 24ч</div>'
+            f'<div class="macro dv">{tiles}</div>{verdict}</div>')
+
+
 def build():
     name, md = latest_report()
     date = (name or "").replace(".md", "")
@@ -476,7 +508,7 @@ def build():
         date=html.escape(date), updated=html.escape(updated),
         btc_price=fmt_price(btc.get("price")), btc_chg=chg(btc.get("chg"), btc_up),
         eth_price=fmt_price(eth.get("price")), eth_chg=chg(eth.get("chg"), eth_up),
-        charts=charts, mood=mood_html, flow=flow_html, levels=lvl_html,
+        charts=charts, mood=mood_html, flow=flow_html, derivs=render_derivs(card.get("derivs")), levels=lvl_html,
         top=top or '<p class="muted">Открытых ставок нет.</p>', rest=rest_block,
         macro=macro_tiles(macro), brier=html.escape(str(brier["score"])), bcol=bcol,
         brier_count=html.escape(str(brier["count"])), history=history_strip(closed),
@@ -563,6 +595,10 @@ background:linear-gradient(180deg,#1d1733,#120f26);box-shadow:0 0 26px -9px #f59
 .betr{font-size:14px;padding:6px 0;border-bottom:1px solid var(--line)}
 .macro{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}
 .tile{background:var(--card2);border:1px solid var(--line);border-radius:13px;padding:9px 6px;text-align:center}
+.macro.dv{grid-template-columns:repeat(3,1fr)}
+.macro.dv .tile{border-color:#25e0ff33}
+.dvv{font-size:13px;color:var(--mut);margin-top:10px;line-height:1.5}
+.ts.mut{color:var(--mut)}
 .tl{color:var(--mut);font-size:10px}.tv{font-size:16px;font-weight:800;margin:2px 0}
 .ts{font-size:11px;font-weight:700;font-family:var(--mono)}.ts.up{color:var(--up)}.ts.down{color:var(--down)}
 .briw{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
@@ -651,6 +687,7 @@ def PAGE(**v):
 
 {v['mood']}
 {v['flow']}
+{v['derivs']}
 {v['levels']}
 
 <div class="card fade" style="--d:.2s"><div class="h">🎯 Главные ставки дня</div>{v['top']}{v['rest']}</div>
