@@ -366,6 +366,33 @@ def history_strip(closed):
             f'<div class="dots">{dots}</div>')
 
 
+def render_flow(fl):
+    """Алерт-карточка «Поток умных денег»: вердикт, скью, крупные структуры."""
+    if not fl:
+        return ""
+    if isinstance(fl, str):
+        return ('<div class="flowc fade" style="--d:.1s"><div class="fh">🐋 Поток умных денег</div>'
+                f'<div class="fverdict">{md_inline(fl)}</div></div>')
+    chips = ""
+    for lab, key in (("P/C", "pc"), ("Скью", "skew"), ("Нетто", "net")):
+        if fl.get(key):
+            chips += f'<span class="fchip">{lab}: {md_inline(str(fl[key]))}</span>'
+    if fl.get("range"):
+        chips += f'<span class="fchip hot">🎯 ждут {md_inline(str(fl["range"]))}</span>'
+    rows = ""
+    for t in (fl.get("trades") or [])[:5]:
+        cls = "sell" if str(t.get("s", "")).startswith("s") else "buy"
+        word = "продажа" if cls == "sell" else "покупка"
+        parts = " ".join(md_inline(str(t.get(k, ""))) for k in ("t", "e", "k") if t.get(k))
+        sz = f' · <span class="mono">{md_inline(str(t["sz"]))}</span>' if t.get("sz") else ""
+        rows += (f'<div class="ftr"><span class="ftag {cls}">{word}</span>'
+                 f'<span>{parts}{sz}</span></div>')
+    note = f'<div class="fnote">{md_inline(fl.get("note",""))}</div>' if fl.get("note") else ""
+    return ('<div class="flowc fade" style="--d:.1s"><div class="fh">🐋 Поток умных денег</div>'
+            f'<div class="fverdict">{md_inline(fl.get("verdict",""))}</div>'
+            f'<div class="fchips">{chips}</div>{rows}{note}</div>')
+
+
 def build():
     name, md = latest_report()
     date = (name or "").replace(".md", "")
@@ -399,11 +426,7 @@ def build():
         mood_html = (f'<div class="mood {mood_cls} fade" style="--d:.05s"><div class="mi">{mood_ico}</div>'
                      f'<div><div class="ml">{md_inline(card.get("mood",""))}</div>'
                      f'<div class="mh">{md_inline(card.get("headline",""))}</div></div></div>')
-    flow_html = ""
-    if card.get("flow"):
-        flow_html = (f'<div class="flow fade" style="--d:.1s"><span class="fi">🧠</span>'
-                     f'<div><div class="fk">Поток умных денег</div>'
-                     f'<div class="fv">{md_inline(card["flow"])}</div></div></div>')
+    flow_html = render_flow(card.get("flow"))
 
     ranked = sorted(opens, key=lambda o: abs(o["p"] - 0.5), reverse=True)
     def bet(o):
@@ -510,6 +533,18 @@ border-radius:20px;box-shadow:0 0 22px -9px #25e0ff40,0 14px 40px -16px #7c3aed6
 .flow{display:flex;gap:13px;align-items:center;padding:13px 16px;margin:12px 0;border-color:#2b3a63}
 .flow .fi{font-size:22px}.flow .fk{font-size:11px;letter-spacing:.8px;color:var(--cy);text-transform:uppercase}
 .flow .fv{font-weight:600;font-size:14.5px;margin-top:2px}
+.flowc{padding:15px 17px;margin:12px 0;border:1px solid #f59e0b55;border-radius:20px;
+background:linear-gradient(180deg,#1d1733,#120f26);box-shadow:0 0 26px -9px #f59e0b55,inset 0 1px 0 #ffffff14}
+.flowc .fh{font-weight:800;font-size:15px;color:#ffd79a;margin-bottom:4px}
+.fverdict{font-weight:700;font-size:15.5px;color:#fff;line-height:1.35}
+.fchips{display:flex;gap:7px;flex-wrap:wrap;margin:9px 0 6px}
+.fchip{font-size:12px;font-weight:700;padding:3px 9px;border-radius:8px;background:#ffffff10;border:1px solid var(--line);font-family:var(--mono)}
+.fchip.hot{background:#2a1710;border-color:#f59e0b55;color:#ffcf8a}
+.ftr{display:flex;gap:9px;align-items:center;font-size:13.5px;padding:5px 0;border-top:1px solid var(--line)}
+.ftag{font-size:10.5px;font-weight:800;padding:2px 7px;border-radius:6px;white-space:nowrap}
+.ftag.sell{background:#2b1221;color:#ff9cb4;border:1px solid #ff5c8a55}
+.ftag.buy{background:#0c2b22;color:#5cffc6;border:1px solid #2ff4ad55}
+.fnote{font-size:12.5px;color:var(--mut);margin-top:9px}
 .lvgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .lvc{font-weight:800;font-size:13px;letter-spacing:1px;margin-bottom:6px}
 .lvc.btc{color:var(--btc)}.lvc.eth{color:var(--eth)}
