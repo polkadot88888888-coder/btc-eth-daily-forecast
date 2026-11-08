@@ -40,13 +40,13 @@ def fmt_usd(v):
 
 
 # ─── Coinalyze (напрямую, свой ключ) ──────────────────────────────────────
-def coinalyze(path, symbols, interval="1hour", hours=24):
+def coinalyze(path, symbols, interval="1hour", hours=24, usd=False):
     base = "https://api.coinalyze.net/v1/" + path
-    q = urllib.parse.urlencode({
-        "symbols": symbols, "interval": interval,
-        "from": int(time.time()) - hours * 3600, "to": int(time.time()),
-    })
-    return get(f"{base}?{q}", headers={"api_key": CZ_KEY})
+    params = {"symbols": symbols, "interval": interval,
+              "from": int(time.time()) - hours * 3600, "to": int(time.time())}
+    if usd:
+        params["convert_to_usd"] = "true"
+    return get(f"{base}?{urllib.parse.urlencode(params)}", headers={"api_key": CZ_KEY})
 
 
 def deribit_dvol():
@@ -64,9 +64,10 @@ def deribit_dvol():
 
 
 def via_coinalyze():
-    sym = "BTCUSD_PERP.A"
-    oi = coinalyze("open-interest-history", sym)
-    liq = coinalyze("liquidation-history", sym)
+    # Binance BTCUSDT-перп — самый ликвидный рынок; convert_to_usd=true → всё в $.
+    sym = "BTCUSDT_PERP.A"
+    oi = coinalyze("open-interest-history", sym, usd=True)
+    liq = coinalyze("liquidation-history", sym, usd=True)
     fnd = coinalyze("funding-rate-history", sym)
     hist = (oi[0]["history"] if oi and oi[0].get("history") else [])
     if not hist:
