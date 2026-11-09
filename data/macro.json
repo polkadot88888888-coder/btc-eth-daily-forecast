@@ -1,6 +1,6 @@
 {
-  "fetched_at_utc": "2026-11-08 17:54:21Z",
-  "fetched_at_unix": 1794160461,
+  "fetched_at_utc": "2026-11-09 21:10:07Z",
+  "fetched_at_unix": 1794258607,
   "source": "FRED (Federal Reserve Bank of St. Louis), EOD",
   "note": "Данные на конец торгового дня, не live-котировки.",
   "data": {
@@ -56,9 +56,9 @@
     },
     "VIXCLS": {
       "name": "VIX (волатильность акций)",
-      "date": "2026-11-05",
-      "value": 28.18,
-      "pct_change": 69.66
+      "date": "2026-11-06",
+      "value": 25.64,
+      "pct_change": -9.01
     }
   },
   "errors": {}
