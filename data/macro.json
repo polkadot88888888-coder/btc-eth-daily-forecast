@@ -1,46 +1,46 @@
 {
-  "fetched_at_utc": "2026-11-09 21:10:07Z",
-  "fetched_at_unix": 1794258607,
+  "fetched_at_utc": "2026-11-10 18:21:15Z",
+  "fetched_at_unix": 1794334875,
   "source": "FRED (Federal Reserve Bank of St. Louis), EOD",
   "note": "Данные на конец торгового дня, не live-котировки.",
   "data": {
     "SP500": {
       "name": "S&P 500 (индекс)",
-      "date": "2026-11-05",
-      "value": 7353.73,
-      "pct_change": -4.36
+      "date": "2026-11-09",
+      "value": 7549.94,
+      "pct_change": 2.35
     },
     "NASDAQCOM": {
       "name": "Nasdaq Composite (индекс)",
-      "date": "2026-11-06",
-      "value": 24579.42,
-      "pct_change": 1.09
+      "date": "2026-11-09",
+      "value": 25253.14,
+      "pct_change": 2.74
     },
     "DJIA": {
       "name": "Dow Jones (индекс)",
-      "date": "2026-11-06",
-      "value": 51285.73,
-      "pct_change": -0.46
+      "date": "2026-11-09",
+      "value": 52389.75,
+      "pct_change": 2.15
     },
     "DGS10": {
       "name": "UST 10Y доходность, %",
-      "date": "2026-11-05",
-      "value": 4.84,
-      "change_bp": -6.0,
-      "pct_change": -1.22
+      "date": "2026-11-06",
+      "value": 4.86,
+      "change_bp": 2.0,
+      "pct_change": 0.41
     },
     "DGS2": {
       "name": "UST 2Y доходность, %",
-      "date": "2026-11-05",
-      "value": 4.46,
-      "change_bp": -12.0,
-      "pct_change": -2.62
+      "date": "2026-11-06",
+      "value": 4.51,
+      "change_bp": 5.0,
+      "pct_change": 1.12
     },
     "DTWEXBGS": {
       "name": "Индекс доллара (широкий)",
-      "date": "2026-10-30",
-      "value": 121.6656,
-      "pct_change": -0.06
+      "date": "2026-11-06",
+      "value": 121.8803,
+      "pct_change": 0.31
     },
     "DCOILWTICO": {
       "name": "Нефть WTI, $/барр",
@@ -56,9 +56,9 @@
     },
     "VIXCLS": {
       "name": "VIX (волатильность акций)",
-      "date": "2026-11-06",
-      "value": 25.64,
-      "pct_change": -9.01
+      "date": "2026-11-09",
+      "value": 19.92,
+      "pct_change": -22.31
     }
   },
   "errors": {}

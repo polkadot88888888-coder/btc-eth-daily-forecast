@@ -2,32 +2,32 @@
   "tiles": [
     {
       "label": "Золото XAU",
-      "val": "$4,140",
-      "pct": "+1.68%",
-      "up": true
+      "val": "$4,020",
+      "pct": "-2.90%",
+      "up": false
     },
     {
       "label": "EUR/USD",
-      "val": "1.1163",
-      "pct": "-0.02%",
+      "val": "1.1154",
+      "pct": "-0.72%",
       "up": false
     },
     {
       "label": "USD/JPY",
-      "val": "157.47",
-      "pct": "-0.23%",
-      "up": false
+      "val": "158.23",
+      "pct": "+0.30%",
+      "up": true
     },
     {
       "label": "GBP/USD",
-      "val": "1.3398",
-      "pct": "+0.17%",
-      "up": true
+      "val": "1.3371",
+      "pct": "-0.83%",
+      "up": false
     }
   ],
   "corr": {
-    "corr": 0.74,
-    "beta": 0.82,
+    "corr": 0.64,
+    "beta": 0.65,
     "days": 20,
     "word": "сильно связан — идёт за акциями"
   },
@@ -35,9 +35,9 @@
     {
       "asset": "Nasdaq",
       "kind": "акции",
-      "corr": 0.74,
-      "beta": 0.82,
-      "move": 1.09,
+      "corr": 0.64,
+      "beta": 0.65,
+      "move": 2.74,
       "dir": "up",
       "word": "тянет BTC вверх",
       "days": 20,
@@ -46,20 +46,20 @@
     {
       "asset": "DXY (доллар)",
       "kind": "доллар",
-      "corr": -0.32,
-      "beta": -1.92,
-      "move": -0.06,
-      "dir": "flat",
-      "word": "связь -0.32; данные FRED запаздывают ~10дн — смотри свежий график",
+      "corr": -0.3,
+      "beta": -2.66,
+      "move": 0.31,
+      "dir": "down",
+      "word": "давит BTC вниз",
       "days": 20,
-      "stale": true
+      "stale": false
     },
     {
       "asset": "VIX (страх)",
       "kind": "волатильность акций",
-      "corr": -0.79,
-      "beta": -0.09,
-      "move": -9.01,
+      "corr": -0.71,
+      "beta": -0.07,
+      "move": -22.31,
       "dir": "up",
       "word": "тянет BTC вверх",
       "days": 20,
@@ -71,5 +71,5 @@
       "status": "накопление данных"
     }
   ],
-  "updated": 1794258609
+  "updated": 1794334878
 }
