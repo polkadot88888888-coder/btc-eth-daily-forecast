@@ -6,11 +6,20 @@
       "level": "103.24",
       "move": 0.26,
       "stale": false,
-      "dir": "flat",
-      "conf": "низкая",
-      "lean": 0.01,
-      "why": "VIX ↑6.92% (прямая связь +0.09); Nasdaq ↓0.39% (прямая связь +0.11)",
+      "dir": "up",
+      "conf": "средняя",
+      "lean": 0.4,
+      "why": "Bitcoin ↓2.82% (обратная связь -0.30); VIX ↑6.92% (прямая связь +0.09)",
       "drivers": [
+        {
+          "from": "Bitcoin",
+          "corr": -0.3,
+          "src": "изм.",
+          "move": -2.82,
+          "push": "up",
+          "stale": false,
+          "mag": 0.3384
+        },
         {
           "from": "VIX",
           "corr": 0.09,
@@ -22,34 +31,25 @@
         },
         {
           "from": "Nasdaq",
-          "corr": 0.11,
+          "corr": 0.03,
           "src": "изм.",
-          "move": -0.39,
+          "move": -0.91,
           "push": "down",
           "stale": false,
-          "mag": 0.039
-        },
-        {
-          "from": "Bitcoin",
-          "corr": -0.27,
-          "src": "изм.",
-          "move": 0.36,
-          "push": "down",
-          "stale": false,
-          "mag": 0.03888
+          "mag": 0.024818181818181816
         }
       ]
     },
     {
       "key": "Gold",
       "name": "Золото (XAU)",
-      "level": "$3,887",
-      "move": 0.06,
+      "level": "$3,888",
+      "move": 0.0,
       "stale": false,
       "dir": "down",
       "conf": "низкая",
-      "lean": -0.18,
-      "why": "Доллар (DXY) ↑0.26% (обратная связь -0.35, оценка); VIX ↑6.92% (прямая связь +0.10, оценка)",
+      "lean": -0.37,
+      "why": "Доллар (DXY) ↑0.26% (обратная связь -0.35, оценка); Bitcoin ↓2.82% (прямая связь +0.15, оценка)",
       "drivers": [
         {
           "from": "Доллар (DXY)",
@@ -61,6 +61,15 @@
           "mag": 0.30333333333333334
         },
         {
+          "from": "Bitcoin",
+          "corr": 0.15,
+          "src": "оц.",
+          "move": -2.82,
+          "push": "down",
+          "stale": false,
+          "mag": 0.1692
+        },
+        {
           "from": "VIX",
           "corr": 0.1,
           "src": "оц.",
@@ -68,28 +77,19 @@
           "push": "up",
           "stale": false,
           "mag": 0.09885714285714287
-        },
-        {
-          "from": "Bitcoin",
-          "corr": 0.15,
-          "src": "оц.",
-          "move": 0.36,
-          "push": "up",
-          "stale": false,
-          "mag": 0.021599999999999998
         }
       ]
     },
     {
       "key": "BTC",
       "name": "Bitcoin",
-      "level": "$68.8k",
-      "move": 0.36,
+      "level": "$65.2k",
+      "move": -2.82,
       "stale": false,
       "dir": "down",
       "conf": "средняя",
-      "lean": -1.1,
-      "why": "VIX ↑6.92% (обратная связь -0.67); Доллар (DXY) ↑0.26% (обратная связь -0.27)",
+      "lean": -1.43,
+      "why": "VIX ↑6.92% (обратная связь -0.67); Nasdaq ↓0.91% (прямая связь +0.61)",
       "drivers": [
         {
           "from": "VIX",
@@ -101,26 +101,26 @@
           "mag": 0.6623428571428571
         },
         {
+          "from": "Nasdaq",
+          "corr": 0.61,
+          "src": "изм.",
+          "move": -0.91,
+          "push": "down",
+          "stale": false,
+          "mag": 0.5046363636363637
+        },
+        {
           "from": "Доллар (DXY)",
-          "corr": -0.27,
+          "corr": -0.3,
           "src": "изм.",
           "move": 0.26,
           "push": "down",
           "stale": false,
-          "mag": 0.234
-        },
-        {
-          "from": "Nasdaq",
-          "corr": 0.59,
-          "src": "изм.",
-          "move": -0.39,
-          "push": "down",
-          "stale": false,
-          "mag": 0.20918181818181816
+          "mag": 0.26
         }
       ]
     }
   ],
-  "updated": 1794593647,
+  "updated": 1794674768,
   "note": "Склонность на день из кросс-активного давления, не гарантия."
 }
