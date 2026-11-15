@@ -1,0 +1,116 @@
+{
+ "fetched_at_utc": "2026-11-15T20:24:39Z",
+ "method": "оценка: рост OI → позиции по плечам 10/25/50/100x → уровни ликвидации, пройденные ценой убраны",
+ "data": {
+  "BTC": {
+   "coin": "BTC",
+   "price": 64823.6,
+   "source": "okx",
+   "units": "BTC",
+   "long_below": [
+    {
+     "price": 61500,
+     "amount": 99.9,
+     "cum": 349.5,
+     "share_pct": 3.8,
+     "dist_pct": -5.1
+    },
+    {
+     "price": 60750,
+     "amount": 72.9,
+     "cum": 447.3,
+     "share_pct": 2.7,
+     "dist_pct": -6.3
+    },
+    {
+     "price": 57750,
+     "amount": 99.9,
+     "cum": 791.2,
+     "share_pct": 3.8,
+     "dist_pct": -10.9
+    }
+   ],
+   "short_above": [
+    {
+     "price": 66750,
+     "amount": 136.3,
+     "cum": 217.2,
+     "share_pct": 5.1,
+     "dist_pct": 3.0
+    },
+    {
+     "price": 69750,
+     "amount": 160.6,
+     "cum": 760.4,
+     "share_pct": 6.0,
+     "dist_pct": 7.6
+    },
+    {
+     "price": 74000,
+     "amount": 170.9,
+     "cum": 1743.6,
+     "share_pct": 6.4,
+     "dist_pct": 14.2
+    }
+   ],
+   "long_total": 791.2,
+   "short_total": 1865.7,
+   "bias": "выше больше (шорты)"
+  },
+  "ETH": {
+   "coin": "ETH",
+   "price": 1822.94,
+   "source": "okx",
+   "units": "ETH",
+   "long_below": [
+    {
+     "price": 1760,
+     "amount": 1263.4,
+     "cum": 3234.1,
+     "share_pct": 2.1,
+     "dist_pct": -3.5
+    },
+    {
+     "price": 1650,
+     "amount": 1263.4,
+     "cum": 8411.2,
+     "share_pct": 2.1,
+     "dist_pct": -9.5
+    },
+    {
+     "price": 1610,
+     "amount": 1178.8,
+     "cum": 11137.9,
+     "share_pct": 2.0,
+     "dist_pct": -11.7
+    }
+   ],
+   "short_above": [
+    {
+     "price": 2000,
+     "amount": 5640.1,
+     "cum": 27653.8,
+     "share_pct": 9.4,
+     "dist_pct": 9.7
+    },
+    {
+     "price": 2030,
+     "amount": 5047.9,
+     "cum": 35237.3,
+     "share_pct": 8.4,
+     "dist_pct": 11.4
+    },
+    {
+     "price": 2080,
+     "amount": 5383.2,
+     "cum": 45075.5,
+     "share_pct": 8.9,
+     "dist_pct": 14.1
+    }
+   ],
+   "long_total": 11799.7,
+   "short_total": 48463.0,
+   "bias": "выше больше (шорты)"
+  }
+ }
+}

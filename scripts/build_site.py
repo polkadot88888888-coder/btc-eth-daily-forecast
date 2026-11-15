@@ -401,6 +401,41 @@ def render_flow(fl):
             f'<div class="fchips">{chips}</div>{rows}{note}</div>')
 
 
+def render_liqmap(lm):
+    """Оценочная карта ликвидаций из data/liqmap.json (scripts/liqmap.py)."""
+    if not lm or not isinstance(lm, dict) or not lm.get("data"):
+        return ""
+    tiles = ""
+    for coin in ("BTC", "ETH"):
+        m = lm["data"].get(coin) or {}
+        if not m or m.get("error"):
+            continue
+        def lvl(x):
+            amt = (f'~{x["amount"]:g} {coin}' if x.get("amount") is not None
+                   else f'{x.get("share_pct")}% силы')
+            return f'${x["price"]:,} <span class="muted">({x["dist_pct"]:+.1f}% · {amt})</span>'
+        for side, title, cls in (("long_below", "лонги сгорят ниже", "down"),
+                                 ("short_above", "шорты сгорят выше", "up")):
+            lst = m.get(side) or []
+            if not lst:
+                continue
+            near = min(lst, key=lambda x: abs(x["dist_pct"]))
+            rest = "<br>".join(lvl(x) for x in lst if x is not near)
+            tiles += (f'<div class="tile"><div class="tl">{coin} · {title}</div>'
+                      f'<div class="tv mono">${near["price"]:,}</div>'
+                      f'<div class="ts {cls}">{near["dist_pct"]:+.1f}%</div>'
+                      f'<div class="ts mut" style="margin-top:4px">{rest}</div></div>')
+    if not tiles:
+        return ""
+    src = {m.get("source") for m in lm["data"].values() if isinstance(m, dict)}
+    note = ("Оценка по OKX: где сгорят позиции с плечом 10–100×. Такие зоны часто притягивают цену, "
+            "а после каскада ликвидаций бывает отскок." if "okx" in src else
+            "Оценка по объёму Deribit (без количеств): относительная сила зон.")
+    return ('<div class="card fade" style="--d:.18s"><div class="h">💥 Карта ликвидаций · оценка</div>'
+            f'<div class="macro dv" style="grid-template-columns:repeat(2,minmax(0,1fr))">{tiles}</div>'
+            f'<div class="dvv">{md_inline(note)}</div></div>')
+
+
 def render_derivs(d):
     """Плитки деривативов: OI, изменение OI, ликвидации, funding (из Coinalyze)."""
     if not d or not isinstance(d, dict):
@@ -718,6 +753,7 @@ def build():
         eth_price=fmt_price(eth.get("price")), eth_chg=chg(eth.get("chg"), eth_up),
         charts=charts, mood=mood_html, flow=flow_html,
         derivs=render_derivs(load_json("derivs.json") or card.get("derivs")),
+        liqmap=render_liqmap(load_json("liqmap.json")),
         crossasset=render_crossasset(load_json("crossasset.json")),
         directions=render_directions(load_json("directions.json")),
         strikemap=render_strikemap(card.get("flow"), (btc.get("price") or 0)),
@@ -932,6 +968,7 @@ def PAGE(**v):
 {v['strikemap']}
 {v['optionwalls']}
 {v['derivs']}
+{v['liqmap']}
 {v['crossasset']}
 {v['directions']}
 {v['levels']}
