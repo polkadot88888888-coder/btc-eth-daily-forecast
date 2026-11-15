@@ -1,31 +1,31 @@
 {
- "fetched_at_utc": "2026-11-15T21:48:32Z",
+ "fetched_at_utc": "2026-11-15T21:48:58Z",
  "method": "оценка: OKX (рост OI) + Hyperliquid (объём, откалиброван на его OI) → позиции по плечам 10/25/50/100x (на HL до его максимума) → уровни ликвидации, пройденные ценой убраны",
  "data": {
   "BTC": {
    "coin": "BTC",
-   "price": 65071.0,
+   "price": 65076.3,
    "source": "okx+hyperliquid",
    "units": "BTC",
    "long_below": [
     {
      "price": 61500,
-     "amount": 237.2,
-     "cum": 1034.5,
+     "amount": 237.3,
+     "cum": 1035.6,
      "share_pct": 3.6,
      "dist_pct": -5.5
     },
     {
      "price": 60750,
      "amount": 160.6,
-     "cum": 1242.5,
+     "cum": 1243.7,
      "share_pct": 2.4,
      "dist_pct": -6.6
     },
     {
      "price": 57750,
-     "amount": 221.8,
-     "cum": 2054.1,
+     "amount": 221.9,
+     "cum": 2055.8,
      "share_pct": 3.4,
      "dist_pct": -11.3
     }
@@ -34,30 +34,30 @@
     {
      "price": 66750,
      "amount": 268.3,
-     "cum": 567.8,
+     "cum": 568.6,
      "share_pct": 4.1,
      "dist_pct": 2.6
     },
     {
      "price": 69750,
      "amount": 239.0,
-     "cum": 1856.9,
+     "cum": 1858.4,
      "share_pct": 3.6,
      "dist_pct": 7.2
     },
     {
      "price": 71250,
-     "amount": 238.1,
-     "cum": 2777.9,
+     "amount": 238.6,
+     "cum": 2780.1,
      "share_pct": 3.6,
      "dist_pct": 9.5
     }
    ],
-   "long_total": 2101.9,
-   "short_total": 4455.4,
+   "long_total": 2103.6,
+   "short_total": 4466.3,
    "bias": "выше больше (шорты)",
-   "okx_oi": 32253.4,
-   "hl_oi": 36772.8,
+   "okx_oi": 32256.5,
+   "hl_oi": 36772.5,
    "exchanges": [
     "okx",
     "hyperliquid"
@@ -65,60 +65,60 @@
   },
   "ETH": {
    "coin": "ETH",
-   "price": 1821.51,
+   "price": 1821.77,
    "source": "okx+hyperliquid",
    "units": "ETH",
    "long_below": [
     {
      "price": 1760,
-     "amount": 3892.6,
-     "cum": 6024.5,
+     "amount": 3920.4,
+     "cum": 6084.8,
      "share_pct": 3.4,
      "dist_pct": -3.4
     },
     {
      "price": 1690,
-     "amount": 3457.6,
-     "cum": 15331.4,
+     "amount": 3461.4,
+     "cum": 15401.3,
      "share_pct": 3.0,
      "dist_pct": -7.2
     },
     {
      "price": 1650,
-     "amount": 2225.1,
-     "cum": 21812.0,
-     "share_pct": 1.9,
+     "amount": 2250.6,
+     "cum": 21910.9,
+     "share_pct": 2.0,
      "dist_pct": -9.4
     }
    ],
    "short_above": [
     {
      "price": 2000,
-     "amount": 8288.5,
-     "cum": 50524.0,
+     "amount": 8292.1,
+     "cum": 50653.8,
      "share_pct": 7.2,
      "dist_pct": 9.8
     },
     {
      "price": 2030,
-     "amount": 7809.7,
-     "cum": 63651.1,
+     "amount": 7813.5,
+     "cum": 63788.4,
      "share_pct": 6.8,
      "dist_pct": 11.4
     },
     {
      "price": 2080,
-     "amount": 9110.9,
-     "cum": 80521.5,
+     "amount": 9115.9,
+     "cum": 80668.4,
      "share_pct": 7.9,
      "dist_pct": 14.2
     }
    ],
-   "long_total": 29362.1,
-   "short_total": 85765.7,
+   "long_total": 29466.7,
+   "short_total": 85915.0,
    "bias": "выше больше (шорты)",
-   "okx_oi": 670271.6,
-   "hl_oi": 588056.0,
+   "okx_oi": 670450.8,
+   "hl_oi": 588069.1,
    "exchanges": [
     "okx",
     "hyperliquid"
