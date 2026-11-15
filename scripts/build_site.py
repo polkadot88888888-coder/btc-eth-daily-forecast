@@ -428,9 +428,10 @@ def render_liqmap(lm):
     if not tiles:
         return ""
     src = {m.get("source") for m in lm["data"].values() if isinstance(m, dict)}
-    note = ("Оценка по OKX: где сгорят позиции с плечом 10–100×. Такие зоны часто притягивают цену, "
-            "а после каскада ликвидаций бывает отскок." if "okx" in src else
-            "Оценка по объёму Deribit (без количеств): относительная сила зон.")
+    where = "OKX + Hyperliquid" if any("hyperliquid" in (x or "") and "okx" in (x or "") for x in src) else "OKX"
+    note = (f"Оценка по {where}: где сгорят позиции с плечом 10–100×. Такие зоны часто притягивают цену, "
+            "а после каскада ликвидаций бывает отскок." if any("okx" in (x or "") for x in src) else
+            "Оценка по объёму (без количеств): относительная сила зон.")
     return ('<div class="card fade" style="--d:.18s"><div class="h">💥 Карта ликвидаций · оценка</div>'
             f'<div class="macro dv" style="grid-template-columns:repeat(2,minmax(0,1fr))">{tiles}</div>'
             f'<div class="dvv">{md_inline(note)}</div></div>')

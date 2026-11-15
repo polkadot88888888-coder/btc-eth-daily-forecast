@@ -12,11 +12,14 @@ Coinglass отдаёт карту только с платным ключом, �
   5. Складываем в корзины по цене → кластеры ниже цены (лонги) и выше (шорты).
 
 Источники (по очереди, что доступно):
-  okx      — свечи + история OI (BTC-USDT-SWAP / ETH-USDT-SWAP), количества в монетах;
+  okx         — свечи + история OI (BTC-USDT-SWAP / ETH-USDT-SWAP), количества в монетах;
+  hyperliquid — свечи + текущий OI; истории OI нет → новые позиции по объёму, а масштаб
+                калибруется: доля «живых» позиций как у OKX × текущий OI Hyperliquid.
+                Вместе OKX+HL — две крупнейшие площадки по OI BTC вне Binance/Bybit;
   deribit  — свечи Deribit, OI-истории нет → новые позиции оцениваются по объёму
              (только относительная сила, без количеств в монетах).
 
-Это ОЦЕНКА по одной бирже, а не точные данные всего рынка. Сильные кластеры
+Это ОЦЕНКА по двум биржам, а не точные данные всего рынка. Сильные кластеры
 совпадают с Coinglass по расположению; абсолютные объёмы у всего рынка больше.
 
 Запуск:  python3 scripts/liqmap.py            → пишет data/liqmap.json (BTC и ETH)
@@ -86,12 +89,44 @@ def deribit(coin):
     return rows, "deribit"
 
 
+def hyperliquid(coin):
+    """Свечи Hyperliquid (объём в монетах) + текущий OI. Истории OI нет → новые позиции по объёму."""
+    now = int(time.time() * 1000)
+    def post(body):
+        req = urllib.request.Request("https://api.hyperliquid.xyz/info", data=json.dumps(body).encode(),
+                                     headers={**UA, "Content-Type": "application/json"})
+        with urllib.request.urlopen(req, timeout=25) as r:
+            return json.load(r)
+    c = post({"type": "candleSnapshot", "req": {"coin": coin, "interval": "1h",
+                                                "startTime": now - (HOURS + 1) * 3600_000, "endTime": now}})
+    rows = [{"ts": int(x["t"]), "o": float(x["o"]), "h": float(x["h"]), "l": float(x["l"]),
+             "c": float(x["c"]), "vol": float(x["v"])} for x in c]
+    if len(rows) < 48:
+        raise RuntimeError("hyperliquid: мало свечей")
+    meta, ctx = post({"type": "metaAndAssetCtxs"})
+    oi, maxlev = None, 100
+    for i, u in enumerate(meta["universe"]):
+        if u["name"] == coin:
+            oi, maxlev = float(ctx[i]["openInterest"]), int(u.get("maxLeverage") or 100)
+    if not oi:
+        raise RuntimeError("hyperliquid: нет OI")
+    return rows, oi, maxlev
+
+
 # ---------- модель ----------
 
-def build(coin, rows, source):
-    price = rows[-1]["c"]
-    bins = BIN[coin]
-    active = []                                   # [уровень, сторона, объём]
+def leverage_for(maxlev):
+    """Плечи биржи: всё, что выше её максимума, сжимаем в максимум (Hyperliquid: BTC 40x, ETH 25x)."""
+    out = {}
+    for lev, w in LEVERAGE.items():
+        k = min(lev, maxlev)
+        out[k] = out.get(k, 0.0) + w
+    return out
+
+
+def simulate(rows, lev=LEVERAGE):
+    """Живые позиции к последней свече: [уровень, сторона, объём]. Объём — в монетах (по OI) или в долях объёма."""
+    active = []
     for i in range(1, len(rows)):
         r, prev = rows[i], rows[i - 1]
         # 1) сжечь уровни, которые цена прошла за этот час
@@ -112,19 +147,29 @@ def build(coin, rows, source):
             continue
         entry = (r["o"] + r["h"] + r["l"] + r["c"]) / 4
         long_share = 0.55 if r["c"] >= r["o"] else 0.45   # растущий час — чуть больше лонгов
-        for lev, w in LEVERAGE.items():
-            active.append([entry * (1 - 1 / lev + MM), "long", new * long_share * w])
-            active.append([entry * (1 + 1 / lev - MM), "short", new * (1 - long_share) * w])
+        for L, w in lev.items():
+            active.append([entry * (1 - 1 / L + MM), "long", new * long_share * w])
+            active.append([entry * (1 + 1 / L - MM), "short", new * (1 - long_share) * w])
+    return [p for p in active if p[2] > 0]
 
-    agg = {}
+
+def alive_total(active):
+    return sum(p[2] for p in active)
+
+
+def bin_up(active, coin, price, scale=1.0, agg=None):
+    agg = {} if agg is None else agg
     for lvl, side, amt in active:
-        if amt <= 0 or abs(lvl / price - 1) > RANGE:
+        if abs(lvl / price - 1) > RANGE:
             continue
         if (side == "long" and lvl >= price) or (side == "short" and lvl <= price):
             continue
-        b = round(lvl / bins) * bins
-        agg[(side, b)] = agg.get((side, b), 0.0) + amt
+        b = round(lvl / BIN[coin]) * BIN[coin]
+        agg[(side, b)] = agg.get((side, b), 0.0) + amt * scale
+    return agg
 
+
+def summarize(coin, price, agg, source, in_coins, extra=None):
     def side_list(side):
         lv = sorted([(b, a) for (s, b), a in agg.items() if s == side],
                     key=lambda x: -x[0] if side == "long" else x[0])   # от цены наружу
@@ -138,38 +183,73 @@ def build(coin, rows, source):
     total = sum(x["amount"] for x in longs + shorts) or 1.0
     def top(lst):
         best = sorted(lst, key=lambda x: -x["amount"])[:TOP]
-        res = []
-        for x in sorted(best, key=lambda x: abs(x["dist_pct"])):
-            res.append({"price": round(x["price"]), "amount": round(x["amount"], 1) if source == "okx" else None,
-                        "cum": round(x["cum"], 1) if source == "okx" else None,
-                        "share_pct": round(100 * x["amount"] / total, 1), "dist_pct": round(x["dist_pct"], 1)})
-        return res
+        return [{"price": round(x["price"]), "amount": round(x["amount"], 1) if in_coins else None,
+                 "cum": round(x["cum"], 1) if in_coins else None,
+                 "share_pct": round(100 * x["amount"] / total, 1), "dist_pct": round(x["dist_pct"], 1)}
+                for x in sorted(best, key=lambda x: abs(x["dist_pct"]))]
     L, S = sum(x["amount"] for x in longs), sum(x["amount"] for x in shorts)
-    return {
+    res = {
         "coin": coin, "price": round(price, 2), "source": source,
-        "units": coin if source == "okx" else "relative",
+        "units": coin if in_coins else "relative",
         "long_below": top(longs), "short_above": top(shorts),
-        "long_total": round(L, 1) if source == "okx" else None,
-        "short_total": round(S, 1) if source == "okx" else None,
+        "long_total": round(L, 1) if in_coins else None,
+        "short_total": round(S, 1) if in_coins else None,
         "bias": "ниже больше (лонги)" if L > S * 1.2 else "выше больше (шорты)" if S > L * 1.2 else "примерно поровну",
     }
+    res.update(extra or {})
+    return res
 
 
 def one(coin):
+    """OKX (OI-история, монеты) + Hyperliquid (по объёму, откалиброван на его текущий OI по доле OKX).
+    Запасные пути: только OKX → только Hyperliquid (относительно) → Deribit (относительно)."""
     errs = []
-    for fn in (okx, deribit):
-        try:
-            rows, src = fn(coin)
-            return build(coin, rows, src)
-        except Exception as e:  # noqa: BLE001
-            errs.append(f"{fn.__name__}: {e}")
+    okx_rows = hl = None
+    try:
+        okx_rows, _ = okx(coin)
+    except Exception as e:  # noqa: BLE001
+        errs.append(f"okx: {e}")
+    try:
+        hl = hyperliquid(coin)
+    except Exception as e:  # noqa: BLE001
+        errs.append(f"hyperliquid: {e}")
+    if okx_rows:
+        price = okx_rows[-1]["c"]
+        act = simulate(okx_rows)
+        agg = bin_up(act, coin, price)
+        okx_oi = okx_rows[-1]["oi"]
+        extra = {"okx_oi": round(okx_oi, 1)}
+        if hl:
+            hl_rows, hl_oi, maxlev = hl
+            hl_act = simulate(hl_rows, leverage_for(maxlev))
+            raw = alive_total(hl_act)
+            frac = alive_total(act) / okx_oi if okx_oi else 0      # какая доля OI «жива» в модели OKX
+            if raw > 0 and frac > 0:
+                scale = frac * hl_oi / raw
+                bin_up(hl_act, coin, price, scale, agg)
+                extra.update({"hl_oi": round(hl_oi, 1), "exchanges": ["okx", "hyperliquid"]})
+                return summarize(coin, price, agg, "okx+hyperliquid", True, extra)
+        extra["exchanges"] = ["okx"]
+        return summarize(coin, price, agg, "okx", True, extra)
+    if hl:
+        hl_rows, _oi, maxlev = hl
+        price = hl_rows[-1]["c"]
+        return summarize(coin, price, bin_up(simulate(hl_rows, leverage_for(maxlev)), coin, price),
+                         "hyperliquid", False, {"exchanges": ["hyperliquid"], "errors": errs})
+    try:
+        rows, _ = deribit(coin)
+        price = rows[-1]["c"]
+        return summarize(coin, price, bin_up(simulate(rows), coin, price), "deribit", False,
+                         {"exchanges": ["deribit"], "errors": errs})
+    except Exception as e:  # noqa: BLE001
+        errs.append(f"deribit: {e}")
     return {"coin": coin, "error": "; ".join(errs)}
 
 
 def fmt(m):
     if "error" in m:
         return f"{m['coin']}: данных нет ({m['error']})"
-    u = m["coin"] if m["source"] == "okx" else "% силы"
+    u = m["coin"] if m.get("units") == m["coin"] else "% силы"
     def line(x):
         amt = f"~{x['amount']:g} {u}" if x["amount"] is not None else f"{x['share_pct']}% силы"
         return f"  ${x['price']:,} ({x['dist_pct']:+.1f}%): {amt}" + (f", накоплено до уровня ~{x['cum']:g} {u}" if x["cum"] is not None else "")
@@ -187,7 +267,7 @@ def main():
         print("\n\n".join(fmt(m) for m in res.values()))
         return
     data = {"fetched_at_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-            "method": "оценка: рост OI → позиции по плечам 10/25/50/100x → уровни ликвидации, пройденные ценой убраны",
+            "method": "оценка: OKX (рост OI) + Hyperliquid (объём, откалиброван на его OI) → позиции по плечам 10/25/50/100x (на HL до его максимума) → уровни ликвидации, пройденные ценой убраны",
             "data": res}
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     with open(OUT, "w", encoding="utf-8") as f:

@@ -90,12 +90,12 @@ curl -s "https://www.deribit.com/api/v2/public/get_tradingview_chart_data?instru
      cat data/liqmap.json   # data.BTC/ETH: price, source, long_below[], short_above[], bias
      ```
      Если файла нет или `fetched_at_utc` старше ~6 ч — запусти сам: `python3 scripts/liqmap.py`
-     (он сам выберет доступный источник: OKX, иначе Deribit). Это ОЦЕНКА по одной бирже
+     (он сам выберет доступное: OKX + Hyperliquid, иначе одна из них, иначе Deribit). Это ОЦЕНКА по двум биржам
      (как модельная карта Coinglass): где сгорят позиции с плечом. `long_below` — уровни ниже
      цены, где ликвидируются лонги (продажи → цену может «протолкнуть» ниже, потом часто отскок);
      `short_above` — выше цены, где сгорят шорты (покупки → может выстрелить вверх). `amount` —
-     оценка в монетах по OKX, `cum` — сколько накоплено от цены до уровня; при `source`=deribit
-     количеств нет, только `share_pct` (относительная сила). Используй ближайшие сильные
+     оценка в монетах (OKX + Hyperliquid, `source`=okx+hyperliquid), `cum` — сколько накоплено от цены
+     до уровня; если `units`=relative (только Hyperliquid или Deribit) — количеств нет, только `share_pct`. Используй ближайшие сильные
      кластеры как «магниты» и уровни для прогнозов; в отчёте — раздел «Карта ликвидаций».
 4. **Потоки в спотовые BTC/ETH-ETF** за последние дни:
    `https://www.tftc.io/bitcoin-etf-flows/latest.json` (если недоступен — возьми из WebSearch).
