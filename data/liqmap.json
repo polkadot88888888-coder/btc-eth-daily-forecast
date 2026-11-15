@@ -1,115 +1,115 @@
 {
- "fetched_at_utc": "2026-11-15T20:24:39Z",
+ "fetched_at_utc": "2026-11-15T20:26:11Z",
  "method": "оценка: рост OI → позиции по плечам 10/25/50/100x → уровни ликвидации, пройденные ценой убраны",
  "data": {
   "BTC": {
    "coin": "BTC",
-   "price": 64823.6,
+   "price": 64892.3,
    "source": "okx",
    "units": "BTC",
    "long_below": [
     {
      "price": 61500,
      "amount": 99.9,
-     "cum": 349.5,
-     "share_pct": 3.8,
-     "dist_pct": -5.1
+     "cum": 350.9,
+     "share_pct": 3.7,
+     "dist_pct": -5.2
     },
     {
      "price": 60750,
      "amount": 72.9,
-     "cum": 447.3,
+     "cum": 448.7,
      "share_pct": 2.7,
-     "dist_pct": -6.3
+     "dist_pct": -6.4
     },
     {
      "price": 57750,
      "amount": 99.9,
-     "cum": 791.2,
-     "share_pct": 3.8,
-     "dist_pct": -10.9
+     "cum": 793.3,
+     "share_pct": 3.7,
+     "dist_pct": -11.0
     }
    ],
    "short_above": [
     {
      "price": 66750,
      "amount": 136.3,
-     "cum": 217.2,
+     "cum": 218.2,
      "share_pct": 5.1,
-     "dist_pct": 3.0
+     "dist_pct": 2.9
     },
     {
      "price": 69750,
      "amount": 160.6,
-     "cum": 760.4,
+     "cum": 762.2,
      "share_pct": 6.0,
-     "dist_pct": 7.6
+     "dist_pct": 7.5
     },
     {
      "price": 74000,
-     "amount": 170.9,
-     "cum": 1743.6,
+     "amount": 171.0,
+     "cum": 1746.3,
      "share_pct": 6.4,
-     "dist_pct": 14.2
+     "dist_pct": 14.0
     }
    ],
-   "long_total": 791.2,
-   "short_total": 1865.7,
+   "long_total": 793.3,
+   "short_total": 1894.9,
    "bias": "выше больше (шорты)"
   },
   "ETH": {
    "coin": "ETH",
-   "price": 1822.94,
+   "price": 1824.63,
    "source": "okx",
    "units": "ETH",
    "long_below": [
     {
      "price": 1760,
-     "amount": 1263.4,
-     "cum": 3234.1,
+     "amount": 1263.3,
+     "cum": 3233.9,
      "share_pct": 2.1,
      "dist_pct": -3.5
     },
     {
      "price": 1650,
-     "amount": 1263.4,
-     "cum": 8411.2,
+     "amount": 1263.3,
+     "cum": 8410.7,
      "share_pct": 2.1,
-     "dist_pct": -9.5
+     "dist_pct": -9.6
     },
     {
      "price": 1610,
-     "amount": 1178.8,
-     "cum": 11137.9,
+     "amount": 1178.7,
+     "cum": 11137.2,
      "share_pct": 2.0,
-     "dist_pct": -11.7
+     "dist_pct": -11.8
     }
    ],
    "short_above": [
     {
      "price": 2000,
-     "amount": 5640.1,
-     "cum": 27653.8,
+     "amount": 5639.8,
+     "cum": 27652.0,
      "share_pct": 9.4,
-     "dist_pct": 9.7
+     "dist_pct": 9.6
     },
     {
      "price": 2030,
-     "amount": 5047.9,
-     "cum": 35237.3,
+     "amount": 5047.6,
+     "cum": 35235.0,
      "share_pct": 8.4,
-     "dist_pct": 11.4
+     "dist_pct": 11.3
     },
     {
      "price": 2080,
-     "amount": 5383.2,
-     "cum": 45075.5,
+     "amount": 5382.8,
+     "cum": 45072.5,
      "share_pct": 8.9,
-     "dist_pct": 14.1
+     "dist_pct": 14.0
     }
    ],
-   "long_total": 11799.7,
-   "short_total": 48463.0,
+   "long_total": 11798.9,
+   "short_total": 48459.9,
    "bias": "выше больше (шорты)"
   }
  }

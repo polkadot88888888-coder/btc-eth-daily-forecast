@@ -8,17 +8,17 @@
       "stale": false,
       "dir": "down",
       "conf": "средняя",
-      "lean": -0.1,
-      "why": "Bitcoin ↑1.37% (обратная связь -0.30); VIX ↑6.92% (прямая связь +0.09)",
+      "lean": -0.11,
+      "why": "Bitcoin ↑1.45% (обратная связь -0.30); VIX ↑6.92% (прямая связь +0.09)",
       "drivers": [
         {
           "from": "Bitcoin",
           "corr": -0.3,
           "src": "изм.",
-          "move": 1.37,
+          "move": 1.45,
           "push": "down",
           "stale": false,
-          "mag": 0.16440000000000002
+          "mag": 0.174
         },
         {
           "from": "VIX",
@@ -73,18 +73,18 @@
           "from": "Bitcoin",
           "corr": 0.15,
           "src": "оц.",
-          "move": 1.37,
+          "move": 1.45,
           "push": "up",
           "stale": false,
-          "mag": 0.08220000000000001
+          "mag": 0.087
         }
       ]
     },
     {
       "key": "BTC",
       "name": "Bitcoin",
-      "level": "$64.8k",
-      "move": 1.37,
+      "level": "$64.9k",
+      "move": 1.45,
       "stale": false,
       "dir": "down",
       "conf": "средняя",
@@ -121,6 +121,6 @@
       ]
     }
   ],
-  "updated": 1794763722,
+  "updated": 1794774372,
   "note": "Склонность на день из кросс-активного давления, не гарантия."
 }
