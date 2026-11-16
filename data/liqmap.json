@@ -1,129 +1,127 @@
 {
- "fetched_at_utc": "2026-11-16T12:13:30Z",
+ "fetched_at_utc": "2026-11-16T20:42:58Z",
  "method": "оценка: OKX (рост OI) + Hyperliquid (объём, откалиброван на его OI) → позиции по плечам 10/25/50/100x (на HL до его максимума) → уровни ликвидации, пройденные ценой убраны",
  "data": {
   "BTC": {
    "coin": "BTC",
-   "price": 63946.5,
-   "source": "deribit",
-   "units": "relative",
+   "price": 64923.5,
+   "source": "okx+hyperliquid",
+   "units": "BTC",
    "long_below": [
     {
-     "price": 62750,
-     "amount": null,
-     "cum": null,
-     "share_pct": 2.4,
-     "dist_pct": -1.9
+     "price": 62500,
+     "amount": 259.4,
+     "cum": 1175.7,
+     "share_pct": 3.0,
+     "dist_pct": -3.7
     },
     {
-     "price": 61750,
-     "amount": null,
-     "cum": null,
+     "price": 61500,
+     "amount": 228.4,
+     "cum": 1762.5,
      "share_pct": 2.6,
-     "dist_pct": -3.4
+     "dist_pct": -5.3
     },
     {
      "price": 58500,
-     "amount": null,
-     "cum": null,
-     "share_pct": 3.7,
-     "dist_pct": -8.5
+     "amount": 292.6,
+     "cum": 2793.8,
+     "share_pct": 3.4,
+     "dist_pct": -9.9
     }
    ],
    "short_above": [
     {
-     "price": 67250,
-     "amount": null,
-     "cum": null,
-     "share_pct": 3.1,
-     "dist_pct": 5.2
+     "price": 66750,
+     "amount": 291.8,
+     "cum": 1032.6,
+     "share_pct": 3.4,
+     "dist_pct": 2.8
     },
     {
      "price": 70750,
-     "amount": null,
-     "cum": null,
-     "share_pct": 4.2,
-     "dist_pct": 10.6
+     "amount": 280.4,
+     "cum": 3254.7,
+     "share_pct": 3.2,
+     "dist_pct": 9.0
     },
     {
-     "price": 71250,
-     "amount": null,
-     "cum": null,
-     "share_pct": 4.1,
-     "dist_pct": 11.4
+     "price": 71000,
+     "amount": 321.2,
+     "cum": 3576.0,
+     "share_pct": 3.7,
+     "dist_pct": 9.4
     }
    ],
-   "long_total": null,
-   "short_total": null,
+   "long_total": 3223.3,
+   "short_total": 5408.3,
    "bias": "выше больше (шорты)",
+   "okx_oi": 30659.9,
+   "hl_oi": 37684.4,
    "exchanges": [
-    "deribit"
-   ],
-   "errors": [
-    "okx: <urlopen error Tunnel connection failed: 403 Forbidden>",
-    "hyperliquid: <urlopen error Tunnel connection failed: 403 Forbidden>"
+    "okx",
+    "hyperliquid"
    ]
   },
   "ETH": {
    "coin": "ETH",
-   "price": 1791.6,
-   "source": "deribit",
-   "units": "relative",
+   "price": 1816.96,
+   "source": "okx+hyperliquid",
+   "units": "ETH",
    "long_below": [
     {
      "price": 1760,
-     "amount": null,
-     "cum": null,
-     "share_pct": 3.4,
-     "dist_pct": -1.8
+     "amount": 8943.9,
+     "cum": 12069.1,
+     "share_pct": 6.4,
+     "dist_pct": -3.1
     },
     {
      "price": 1750,
-     "amount": null,
-     "cum": null,
-     "share_pct": 3.7,
-     "dist_pct": -2.3
+     "amount": 4144.7,
+     "cum": 16213.8,
+     "share_pct": 3.0,
+     "dist_pct": -3.7
     },
     {
      "price": 1650,
-     "amount": null,
-     "cum": null,
-     "share_pct": 3.2,
-     "dist_pct": -7.9
+     "amount": 5118.1,
+     "cum": 35127.7,
+     "share_pct": 3.7,
+     "dist_pct": -9.2
     }
    ],
    "short_above": [
     {
-     "price": 1980,
-     "amount": null,
-     "cum": null,
-     "share_pct": 4.7,
-     "dist_pct": 10.5
-    },
-    {
-     "price": 1990,
-     "amount": null,
-     "cum": null,
-     "share_pct": 5.0,
-     "dist_pct": 11.1
+     "price": 1890,
+     "amount": 8377.5,
+     "cum": 18460.4,
+     "share_pct": 6.0,
+     "dist_pct": 4.0
     },
     {
      "price": 2000,
-     "amount": null,
-     "cum": null,
-     "share_pct": 6.9,
-     "dist_pct": 11.6
+     "amount": 10916.2,
+     "cum": 61665.0,
+     "share_pct": 7.8,
+     "dist_pct": 10.1
+    },
+    {
+     "price": 2080,
+     "amount": 9015.9,
+     "cum": 91382.1,
+     "share_pct": 6.5,
+     "dist_pct": 14.5
     }
    ],
-   "long_total": null,
-   "short_total": null,
+   "long_total": 45647.8,
+   "short_total": 94010.7,
    "bias": "выше больше (шорты)",
+   "okx_oi": 659035.5,
+   "hl_oi": 598421.1,
    "exchanges": [
-    "deribit"
-   ],
-   "errors": [
-    "okx: <urlopen error Tunnel connection failed: 403 Forbidden>",
-    "hyperliquid: <urlopen error Tunnel connection failed: 403 Forbidden>"
+    "okx",
+    "hyperliquid"
    ]
   }
  }
