@@ -1,6 +1,6 @@
 {
-  "fetched_at_utc": "2026-11-21 17:49:27Z",
-  "fetched_at_unix": 1795283367,
+  "fetched_at_utc": "2026-11-22 18:07:19Z",
+  "fetched_at_unix": 1795370839,
   "source": "FRED (Federal Reserve Bank of St. Louis), EOD",
   "note": "Данные на конец торгового дня, не live-котировки.",
   "data": {
