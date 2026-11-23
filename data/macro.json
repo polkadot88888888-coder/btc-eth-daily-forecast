@@ -1,14 +1,14 @@
 {
-  "fetched_at_utc": "2026-11-22 18:07:19Z",
-  "fetched_at_unix": 1795370839,
+  "fetched_at_utc": "2026-11-23 22:17:51Z",
+  "fetched_at_unix": 1795472271,
   "source": "FRED (Federal Reserve Bank of St. Louis), EOD",
   "note": "Данные на конец торгового дня, не live-котировки.",
   "data": {
     "SP500": {
       "name": "S&P 500 (индекс)",
-      "date": "2026-11-19",
-      "value": 7175.83,
-      "pct_change": -2.02
+      "date": "2026-11-20",
+      "value": 6910.39,
+      "pct_change": -3.7
     },
     "NASDAQCOM": {
       "name": "Nasdaq Composite (индекс)",
@@ -24,23 +24,23 @@
     },
     "DGS10": {
       "name": "UST 10Y доходность, %",
-      "date": "2026-11-19",
-      "value": 5.04,
-      "change_bp": -3.0,
-      "pct_change": -0.59
+      "date": "2026-11-20",
+      "value": 4.92,
+      "change_bp": -12.0,
+      "pct_change": -2.38
     },
     "DGS2": {
       "name": "UST 2Y доходность, %",
-      "date": "2026-11-19",
-      "value": 4.76,
-      "change_bp": -4.0,
-      "pct_change": -0.83
+      "date": "2026-11-20",
+      "value": 4.63,
+      "change_bp": -13.0,
+      "pct_change": -2.73
     },
     "DTWEXBGS": {
       "name": "Индекс доллара (широкий)",
-      "date": "2026-11-13",
-      "value": 122.6503,
-      "pct_change": 0.09
+      "date": "2026-11-20",
+      "value": 123.5978,
+      "pct_change": 0.06
     },
     "DCOILWTICO": {
       "name": "Нефть WTI, $/барр",
@@ -56,9 +56,9 @@
     },
     "VIXCLS": {
       "name": "VIX (волатильность акций)",
-      "date": "2026-11-19",
-      "value": 28.44,
-      "pct_change": 15.8
+      "date": "2026-11-20",
+      "value": 35.89,
+      "pct_change": 26.2
     }
   },
   "errors": {}
