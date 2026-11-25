@@ -1,129 +1,127 @@
 {
- "fetched_at_utc": "2026-11-25T12:10:45Z",
+ "fetched_at_utc": "2026-11-25T20:16:40Z",
  "method": "оценка: OKX (рост OI) + Hyperliquid (объём, откалиброван на его OI) → позиции по плечам 10/25/50/100x (на HL до его максимума) → уровни ликвидации, пройденные ценой убраны",
  "data": {
   "BTC": {
    "coin": "BTC",
-   "price": 58476.0,
-   "source": "deribit",
-   "units": "relative",
+   "price": 60059.0,
+   "source": "okx+hyperliquid",
+   "units": "BTC",
    "long_below": [
     {
-     "price": 58250,
-     "amount": null,
-     "cum": null,
-     "share_pct": 4.0,
-     "dist_pct": -0.4
-    },
-    {
-     "price": 58000,
-     "amount": null,
-     "cum": null,
-     "share_pct": 3.6,
-     "dist_pct": -0.8
+     "price": 57000,
+     "amount": 573.7,
+     "cum": 980.1,
+     "share_pct": 5.3,
+     "dist_pct": -5.1
     },
     {
      "price": 54750,
-     "amount": null,
-     "cum": null,
+     "amount": 393.4,
+     "cum": 2599.7,
+     "share_pct": 3.6,
+     "dist_pct": -8.8
+    },
+    {
+     "price": 53500,
+     "amount": 350.2,
+     "cum": 3777.9,
      "share_pct": 3.2,
-     "dist_pct": -6.4
+     "dist_pct": -10.9
     }
    ],
    "short_above": [
     {
-     "price": 64500,
-     "amount": null,
-     "cum": null,
-     "share_pct": 3.8,
-     "dist_pct": 10.3
+     "price": 61250,
+     "amount": 444.3,
+     "cum": 944.0,
+     "share_pct": 4.1,
+     "dist_pct": 2.0
     },
     {
      "price": 64750,
-     "amount": null,
-     "cum": null,
-     "share_pct": 3.4,
-     "dist_pct": 10.7
+     "amount": 631.9,
+     "cum": 3190.8,
+     "share_pct": 5.8,
+     "dist_pct": 7.8
     },
     {
-     "price": 65750,
-     "amount": null,
-     "cum": null,
-     "share_pct": 4.2,
-     "dist_pct": 12.4
+     "price": 67750,
+     "amount": 337.9,
+     "cum": 5961.9,
+     "share_pct": 3.1,
+     "dist_pct": 12.8
     }
    ],
-   "long_total": null,
-   "short_total": null,
-   "bias": "примерно поровну",
+   "long_total": 4407.2,
+   "short_total": 6495.0,
+   "bias": "выше больше (шорты)",
+   "okx_oi": 31700.5,
+   "hl_oi": 36590.2,
    "exchanges": [
-    "deribit"
-   ],
-   "errors": [
-    "okx: <urlopen error Tunnel connection failed: 403 Forbidden (agent proxy: no rule or network setting allows this host)>",
-    "hyperliquid: <urlopen error Tunnel connection failed: 403 Forbidden (agent proxy: no rule or network setting allows this host)>"
+    "okx",
+    "hyperliquid"
    ]
   },
   "ETH": {
    "coin": "ETH",
-   "price": 1638.0,
-   "source": "deribit",
-   "units": "relative",
+   "price": 1686.68,
+   "source": "okx+hyperliquid",
+   "units": "ETH",
    "long_below": [
     {
-     "price": 1620,
-     "amount": null,
-     "cum": null,
-     "share_pct": 4.8,
-     "dist_pct": -1.1
+     "price": 1600,
+     "amount": 7439.4,
+     "cum": 9473.8,
+     "share_pct": 4.3,
+     "dist_pct": -5.1
+    },
+    {
+     "price": 1550,
+     "amount": 7107.3,
+     "cum": 34890.0,
+     "share_pct": 4.1,
+     "dist_pct": -8.1
     },
     {
      "price": 1540,
-     "amount": null,
-     "cum": null,
-     "share_pct": 4.2,
-     "dist_pct": -6.0
-    },
-    {
-     "price": 1530,
-     "amount": null,
-     "cum": null,
-     "share_pct": 4.7,
-     "dist_pct": -6.6
+     "amount": 8934.1,
+     "cum": 43824.1,
+     "share_pct": 5.2,
+     "dist_pct": -8.7
     }
    ],
    "short_above": [
     {
-     "price": 1830,
-     "amount": null,
-     "cum": null,
-     "share_pct": 3.7,
-     "dist_pct": 11.7
-    },
-    {
-     "price": 1840,
-     "amount": null,
-     "cum": null,
-     "share_pct": 3.3,
-     "dist_pct": 12.3
+     "price": 1740,
+     "amount": 6964.7,
+     "cum": 23750.3,
+     "share_pct": 4.0,
+     "dist_pct": 3.2
     },
     {
      "price": 1860,
-     "amount": null,
-     "cum": null,
+     "amount": 13731.3,
+     "cum": 69634.7,
      "share_pct": 7.9,
-     "dist_pct": 13.6
+     "dist_pct": 10.3
+    },
+    {
+     "price": 1870,
+     "amount": 8160.9,
+     "cum": 77795.7,
+     "share_pct": 4.7,
+     "dist_pct": 10.9
     }
    ],
-   "long_total": null,
-   "short_total": null,
-   "bias": "ниже больше (лонги)",
+   "long_total": 76028.5,
+   "short_total": 96792.3,
+   "bias": "выше больше (шорты)",
+   "okx_oi": 642390.3,
+   "hl_oi": 645066.4,
    "exchanges": [
-    "deribit"
-   ],
-   "errors": [
-    "okx: <urlopen error Tunnel connection failed: 403 Forbidden (agent proxy: no rule or network setting allows this host)>",
-    "hyperliquid: <urlopen error Tunnel connection failed: 403 Forbidden (agent proxy: no rule or network setting allows this host)>"
+    "okx",
+    "hyperliquid"
    ]
   }
  }
