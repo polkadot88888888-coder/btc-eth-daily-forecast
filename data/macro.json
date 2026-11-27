@@ -1,14 +1,14 @@
 {
-  "fetched_at_utc": "2026-11-26 19:54:22Z",
-  "fetched_at_unix": 1795722862,
+  "fetched_at_utc": "2026-11-27 19:43:15Z",
+  "fetched_at_unix": 1795808595,
   "source": "FRED (Federal Reserve Bank of St. Louis), EOD",
   "note": "Данные на конец торгового дня, не live-котировки.",
   "data": {
     "SP500": {
       "name": "S&P 500 (индекс)",
-      "date": "2026-11-24",
-      "value": 7201.09,
-      "pct_change": -0.5
+      "date": "2026-11-25",
+      "value": 7182.78,
+      "pct_change": -0.25
     },
     "NASDAQCOM": {
       "name": "Nasdaq Composite (индекс)",
@@ -56,9 +56,9 @@
     },
     "VIXCLS": {
       "name": "VIX (волатильность акций)",
-      "date": "2026-11-24",
-      "value": 26.36,
-      "pct_change": -0.98
+      "date": "2026-11-26",
+      "value": 26.8,
+      "pct_change": -5.27
     }
   },
   "errors": {}
